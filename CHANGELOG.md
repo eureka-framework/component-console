@@ -6,14 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 
 ## [5.0.0] - 2020 (unreleased)
-### Changed
- * New require PHP 7.4+
- * All collections now use an abstract class (menu, breadcrumb, carousel & notifications)
+### Changed 
+ * Rename Eurekon to component-console
+ * Now require PHP 7.4
+ * Update code
 ### Added
- * Session + trait for controller
- * Global collection abstract class
-### Removed
- * Flash notifications (now handled directly in session trait + session)
+ * Add tests
+ * Add simplifications
+ * Add CI
 
 
 
