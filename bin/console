@@ -1,0 +1,55 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * Copyright (c) Romain Cottard
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+declare(strict_types=1);
+
+use Eureka\Component\Console\Console;
+
+//~ Define Loader & add main classes for config
+$autoload = getcwd() . '/vendor/autoload.php';
+if (is_file($autoload)) {
+    require $autoload;
+}
+
+if (!class_exists('Eureka\Component\Console\Console', true)) {
+    if (is_file($autoload = __DIR__ . '/../vendor/autoload.php')) {
+        require($autoload);
+    } elseif (is_file($autoload = __DIR__ . '/../../../autoload.php')) {
+        require($autoload);
+    } else {
+        fwrite(STDERR,
+               'You must set up the project dependencies, run the following commands:'.PHP_EOL.
+               'curl -s http://getcomposer.org/installer | php'.PHP_EOL.
+               'php composer.phar install'.PHP_EOL
+        );
+        exit(1);
+    }
+}
+
+
+try {
+
+    $console = (new Console($argv))
+        ->setBaseNamespaces([
+            'Application\Script',
+            'Eureka\Component\Deployer\Script',
+            'Eureka\Component',
+        ])
+    ;
+
+    $console->before();
+    $console->run();
+    $console->after();
+    $console->terminate();
+
+} catch (\Exception $exception) {
+    echo 'Exception: ' . $exception->getMessage() . PHP_EOL;
+    exit(1);
+}
