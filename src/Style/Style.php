@@ -227,7 +227,6 @@ class Style
 
         $text = '';
         if ($this->foregroundColor !== '') {
-
             //~ Highlight
             $highlight = $this->hasHighlightedForeground ? static::HIGH_FOREGROUND : static::REGULAR_FOREGROUND;
 

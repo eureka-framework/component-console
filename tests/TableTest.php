@@ -50,5 +50,4 @@ ASSERT;
 
         $this->assertEquals($assert, $display);
     }
-
 }

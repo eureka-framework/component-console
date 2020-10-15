@@ -32,7 +32,7 @@ class Console
     protected bool $isVerbose = true;
 
     /** @var Argument\Argument $argument Argument object */
-    protected Argument\Argument$argument;
+    protected Argument\Argument $argument;
 
     /** @var ContainerInterface|null */
     protected ?ContainerInterface $container = null;
@@ -204,13 +204,12 @@ class Console
 
             if ($this->argument->has('debug')) {
                 // @codeCoverageIgnoreStart
-                echo $exception->getFile().PHP_EOL;
-                echo $exception->getLine().PHP_EOL;
-                echo $exception->getTraceAsString().PHP_EOL;
+                echo $exception->getFile() . PHP_EOL;
+                echo $exception->getLine() . PHP_EOL;
+                echo $exception->getTraceAsString() . PHP_EOL;
                 // @codeCoverageIgnoreEnd
             }
         } finally {
-
             if ($beforeHasBeenRun && $script instanceof ScriptInterface) {
                 // ~ Execute this method after execution of main script method.
                 $script->after();

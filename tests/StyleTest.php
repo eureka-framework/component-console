@@ -85,7 +85,7 @@ class StyleTest extends TestCase
         //~ Set style
         $style = (new Style())->color('bg', Color::GREEN)->color('fg', Color::BLACK);
 
-        $this->assertEquals("\033[0;30m\033[42mThis is my text\033[0m", (string) $style->setText('This is my text'), );
+        $this->assertEquals("\033[0;30m\033[42mThis is my text\033[0m", (string) $style->setText('This is my text'));
     }
 
     /**

@@ -62,7 +62,6 @@ class Cell
         $content = $this->paddingSpace ? ' ' . $this->content . ' ' : $this->content;
 
         return (string) str_pad($content, $this->size, ' ', $this->align);
-
     }
 
     /**

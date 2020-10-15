@@ -41,5 +41,4 @@ class Color
 
     /** @var string COLOR_WHITE Index color character for white color. */
     const WHITE = '7';
-
 }
