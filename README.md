@@ -2,9 +2,9 @@
 
 [![Current version](https://img.shields.io/packagist/v/eureka/component-console.svg?logo=composer)](https://packagist.org/packages/eureka/component-console)
 [![Supported PHP version](https://img.shields.io/static/v1?logo=php&label=PHP&message=%5E7.4&color=777bb4)](https://packagist.org/packages/eureka/component-console)
-[![codecov](https://codecov.io/gh/eureka-framework/component-console/branch/main/graph/badge.svg)](https://codecov.io/gh/eureka-framework/component-console)
-[![Build Status](https://travis-ci.org/eureka-framework/component-console.svg?branch=main)](https://travis-ci.org/eureka-framework/component-console)
 ![CI](https://github.com/eureka-framework/component-console/workflows/CI/badge.svg)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=eureka-framework_component-console&metric=alert_status)](https://sonarcloud.io/dashboard?id=eureka-framework_component-console)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=eureka-framework_component-console&metric=coverage)](https://sonarcloud.io/dashboard?id=eureka-framework_component-console)
 
 
 Console component to run script.
