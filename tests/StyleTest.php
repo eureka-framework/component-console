@@ -28,7 +28,7 @@ class StyleTest extends TestCase
      * Test Style class.
      * Simulate --color argument for script.
      */
-    public function testTextHasBoldCharactersWhenColorIsEnabled()
+    public function testTextHasBoldCharactersWhenColorIsEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array('--color');
@@ -44,7 +44,7 @@ class StyleTest extends TestCase
      * Test Style class.
      * Simulate --color argument for script.
      */
-    public function testTextHasUnderlineCharactersWhenColorIsEnabled()
+    public function testTextHasUnderlineCharactersWhenColorIsEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array('--color');
@@ -60,7 +60,7 @@ class StyleTest extends TestCase
      * Test Style class.
      * Simulate --color argument for script.
      */
-    public function testTextHasBoldAndUnderlineCharactersWhenColorIsEnabled()
+    public function testTextHasBoldAndUnderlineCharactersWhenColorIsEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array('--color');
@@ -76,7 +76,7 @@ class StyleTest extends TestCase
      * Test Style class.
      * Simulate --color argument for script.
      */
-    public function testTextHasBackgroundAndForegroundColorsCharactersWhenColorIsEnabled()
+    public function testTextHasBackgroundAndForegroundColorsCharactersWhenColorIsEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array('--color');
@@ -92,7 +92,7 @@ class StyleTest extends TestCase
      * Test Style class.
      * Simulate --color argument for script.
      */
-    public function testTextHasBoldAndUnderlineAndForegroundColorCharactersWhenColorIsEnabled()
+    public function testTextHasBoldAndUnderlineAndForegroundColorCharactersWhenColorIsEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array('--color');
@@ -108,7 +108,7 @@ class StyleTest extends TestCase
      * Test Style class.
      * Simulate --color argument for script.
      */
-    public function testTextHasUnderlineAndForegroundColorCharactersWhenColorIsEnabled()
+    public function testTextHasUnderlineAndForegroundColorCharactersWhenColorIsEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array('--color');
@@ -124,7 +124,7 @@ class StyleTest extends TestCase
      * Test Style class.
      * Simulate --color argument for script.
      */
-    public function testTextHasBoldAndForegroundHighlightAndForegroundColorCharactersWhenColorIsEnabled()
+    public function testTextHasBoldAndForegroundHighlightAndForegroundColorCharactersWhenColorIsEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array('--color');
@@ -140,7 +140,7 @@ class StyleTest extends TestCase
      * Test Style class.
      * Simulate --color argument for script.
      */
-    public function testTextHasBackgroundHighlightAndBackgroundColorCharactersWhenColorIsEnabled()
+    public function testTextHasBackgroundHighlightAndBackgroundColorCharactersWhenColorIsEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array('--color');
@@ -156,7 +156,7 @@ class StyleTest extends TestCase
      * Test Style class.
      * Simulate --color argument for script.
      */
-    public function testTextHasForegroundHighlightAndBackgroundColorCharactersWhenColorIsEnabled()
+    public function testTextHasForegroundHighlightAndBackgroundColorCharactersWhenColorIsEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array('--color');
@@ -171,7 +171,7 @@ class StyleTest extends TestCase
     /**
      * Test Style class.
      */
-    public function testTextHasNotBoldCharactersWhenColorIsNotEnabled()
+    public function testTextHasNotBoldCharactersWhenColorIsNotEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array();
@@ -186,7 +186,7 @@ class StyleTest extends TestCase
     /**
      * Test Style class.
      */
-    public function testTextHasNotUnderlineCharactersWhenColorIsNotEnabled()
+    public function testTextHasNotUnderlineCharactersWhenColorIsNotEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array();
@@ -201,7 +201,7 @@ class StyleTest extends TestCase
     /**
      * Test Style class.
      */
-    public function testTextHasNotBoldAndUnderlineCharactersWhenColorIsNotEnabled()
+    public function testTextHasNotBoldAndUnderlineCharactersWhenColorIsNotEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array();
@@ -216,7 +216,7 @@ class StyleTest extends TestCase
     /**
      * Test Style class.
      */
-    public function testTextHasNotBackgroundAndForegroundColorsCharactersWhenColorIsNotEnabled()
+    public function testTextHasNotBackgroundAndForegroundColorsCharactersWhenColorIsNotEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array();
@@ -231,7 +231,7 @@ class StyleTest extends TestCase
     /**
      * Test Style class.
      */
-    public function testTextHasNotBoldAndUnderlineAndForegroundColorCharactersWhenColorIsNotEnabled()
+    public function testTextHasNotBoldAndUnderlineAndForegroundColorCharactersWhenColorIsNotEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array();
@@ -246,7 +246,7 @@ class StyleTest extends TestCase
     /**
      * Test Style class.
      */
-    public function testTextHasNotUnderlineAndForegroundColorCharactersWhenColorIsNotEnabled()
+    public function testTextHasNotUnderlineAndForegroundColorCharactersWhenColorIsNotEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array();
@@ -261,7 +261,7 @@ class StyleTest extends TestCase
     /**
      * Test Style class.
      */
-    public function testTextHasNotBoldAndForegroundHighlightAndForegroundColorCharactersWhenColorIsNotEnabled()
+    public function testTextHasNotBoldAndForegroundHighlightAndForegroundColorCharactersWhenColorIsNotEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array();
@@ -276,7 +276,7 @@ class StyleTest extends TestCase
     /**
      * Test Style class.
      */
-    public function testTextHasNotBackgroundHighlightAndBackgroundColorCharactersWhenColorIsNotEnabled()
+    public function testTextHasNotBackgroundHighlightAndBackgroundColorCharactersWhenColorIsNotEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array();
@@ -291,7 +291,7 @@ class StyleTest extends TestCase
     /**
      * Test Style class.
      */
-    public function testTextHasNotForegroundHighlightAndBackgroundColorCharactersWhenColorIsNotEnabled()
+    public function testTextHasNotForegroundHighlightAndBackgroundColorCharactersWhenColorIsNotEnabled(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array();
@@ -306,7 +306,7 @@ class StyleTest extends TestCase
     /**
      * Test Style class.
      */
-    public function testTextHasDefinedPaddingChars()
+    public function testTextHasDefinedPaddingChars(): void
     {
         //~ --color parameter is required to render text with "style characters".
         $mockParameterColor = array();

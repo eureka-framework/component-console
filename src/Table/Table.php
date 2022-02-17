@@ -22,22 +22,27 @@ use Eureka\Component\Console\Style\Style;
 class Table
 {
     /** @var Row[] $rows */
-    private array $rows = [];
+    private array $rows;
 
     /** @var Column[]  */
-    private array $columns = [];
+    private array $columns;
+
+    private int $borderRendering;
 
     /**
      * Table constructor.
      *
      * @param Column[] $columns
      */
-    public function __construct(array $columns)
+    public function __construct(array $columns, bool $withHeader = true, int $borderRendering = BorderStyle::ASCII)
     {
-        $this->columns = $columns;
-        $this->rows    = [];
+        $this->columns         = $columns;
+        $this->rows            = [];
+        $this->borderRendering = $borderRendering;
 
-        $this->createHeader();
+        if ($withHeader) {
+            $this->createHeader();
+        }
     }
 
     /**
@@ -56,13 +61,13 @@ class Table
     {
         $cells = [];
 
-        $this->addBar();
+        $this->addBar(BorderStyle::DOUBLE_TOP);
         foreach ($this->columns as $column) {
             $cells[] = new Cell($column->getName(), $column->getSize(), $column->getAlign());
         }
 
         $this->add(new Row($cells, true));
-        $this->addBar();
+        $this->addBar(BorderStyle::DOUBLE_MIDDLE);
 
         return $this;
     }
@@ -79,7 +84,7 @@ class Table
     }
 
     /**
-     * @param array $data
+     * @param array<int,string> $data
      * @param bool $isHeader
      * @param Style|null $style
      * @return Table
@@ -107,14 +112,14 @@ class Table
     }
 
     /**
-     * @param array $data
+     * @param array<int,string> $data
      * @param bool $isHeader
      * @return Table
      */
     public function addRowSpan(array $data, bool $isHeader = false): self
     {
         if ($isHeader) {
-            $this->addBar(); // @codeCoverageIgnore
+            $this->addBar(BorderStyle::DOUBLE_MIDDLE_SPAN_BOTTOM); // @codeCoverageIgnore
         }
 
         $size = count($this->columns) - 1;
@@ -126,23 +131,41 @@ class Table
 
 
         if ($isHeader) {
-            $this->addBar(); // @codeCoverageIgnore
+            $this->addBar(BorderStyle::SIMPLE_MIDDLE_SPAN_TOP); // @codeCoverageIgnore
         }
 
         return $this;
     }
 
     /**
+     * @param int $borderType
      * @return Table
      */
-    public function addBar(): self
+    public function addBar(int $borderType = BorderStyle::SIMPLE_MIDDLE): self
     {
-        $cells = [];
-        foreach ($this->columns as $column) {
-            $cells[] = new Cell(str_pad('', $column->getSize(), '-'), $column->getSize(), Cell::ALIGN_CENTER, false);
+        $borderStyle = new BorderStyle($this->borderRendering);
+
+        if (
+            in_array($borderType, [
+            BorderStyle::SIMPLE_TOP,
+            BorderStyle::SIMPLE_BOTTOM,
+            BorderStyle::SIMPLE_MIDDLE,
+            BorderStyle::SIMPLE_MIDDLE_SPAN_TOP,
+            BorderStyle::SIMPLE_MIDDLE_SPAN_BOTTOM,
+            BorderStyle::SIMPLE_MIDDLE_SPAN_BOTH,
+            ])
+        ) {
+            $padString = $borderStyle->getHorizontal(BorderStyle::SIMPLE);
+        } else {
+            $padString = $borderStyle->getHorizontal(BorderStyle::DOUBLE);
         }
 
-        $this->add(new Row($cells, false, true));
+        $cells = [];
+        foreach ($this->columns as $column) {
+            $cells[] = new Cell(self::strPadUnicode('', $column->getSize(), $padString), $column->getSize(), Cell::ALIGN_CENTER, false);
+        }
+
+        $this->add(new Row($cells, false, true, null, $borderType, $borderStyle));
 
         return $this;
     }
@@ -152,7 +175,7 @@ class Table
      */
     public function render(): string
     {
-        $this->addBar();
+        $this->addBar(BorderStyle::DOUBLE_BOTTOM);
 
         $lines = [];
         foreach ($this->rows as $row) {
@@ -179,5 +202,39 @@ class Table
     public function __toString(): string
     {
         return $this->render();
+    }
+
+    public static function strPadUnicode(
+        string $string,
+        int $padLength,
+        string $padString = ' ',
+        int $dir = STR_PAD_RIGHT
+    ): string {
+        $stringLength    = mb_strlen($string);
+        $padStringLength = mb_strlen($padString);
+        if (!$stringLength && ($dir == STR_PAD_RIGHT || $dir == STR_PAD_LEFT)) {
+            $stringLength = 1;
+        }
+        if (!$padLength || !$padStringLength || $padLength <= $stringLength) {
+            return $string;
+        }
+
+        $result = '';
+        $repeat = (int) ceil($stringLength - $padStringLength + $padLength);
+        if ($dir == STR_PAD_RIGHT) {
+            $result = $string . str_repeat($padString, $repeat);
+            $result = mb_substr($result, 0, $padLength);
+        } else if ($dir == STR_PAD_LEFT) {
+            $result = str_repeat($padString, $repeat) . $string;
+            $result = mb_substr($result, -$padLength);
+        } else if ($dir == STR_PAD_BOTH) {
+            $length = ($padLength - $stringLength) / 2;
+            $repeat = (int) ceil($length / $padStringLength);
+            $result = mb_substr(str_repeat($padString, $repeat), 0, (int) floor($length))
+                . $string
+                . mb_substr(str_repeat($padString, $repeat), 0, (int) ceil($length));
+        }
+
+        return $result;
     }
 }

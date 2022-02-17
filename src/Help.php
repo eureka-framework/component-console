@@ -21,7 +21,7 @@ use Eureka\Component\Console\Style\Color;
  */
 class Help
 {
-    /** @var array $arguments List of arguments for script */
+    /** @var array<\stdClass> $arguments List of arguments for script */
     protected array $arguments = [];
 
     /** @var string $script_name Script name */

@@ -25,7 +25,10 @@ class ScriptTest extends TestCase
 {
     const NB_ELEMENTS = 10;
 
-    public function testConsoleWithoutArgumentMustDisplayHelpAndException()
+    /**
+     * @throws \Exception
+     */
+    public function testConsoleWithoutArgumentMustDisplayHelpAndException(): void
     {
         //~ Mock parameters
         $mockArguments = ['bin/console'];
@@ -60,14 +63,17 @@ ASSERT;
         $console->after();
         $buffer = ob_get_clean();
 
-        $buffer = explode(PHP_EOL, rtrim($buffer));
+        $buffer = explode(PHP_EOL, rtrim((string) $buffer));
         array_pop($buffer);
         $buffer = implode(PHP_EOL, $buffer);
 
         $this->assertEquals($assert, $buffer);
     }
 
-    public function testConsoleWithArgumentHelpMustDisplayHelp()
+    /**
+     * @throws \Exception
+     */
+    public function testConsoleWithArgumentHelpMustDisplayHelp(): void
     {
         //~ Mock parameters
         $mockArguments = ['bin/console', '--help'];
@@ -99,14 +105,17 @@ ASSERT;
         $console->after();
         $buffer = ob_get_clean();
 
-        $buffer = explode(PHP_EOL, rtrim($buffer));
+        $buffer = explode(PHP_EOL, rtrim((string) $buffer));
         array_pop($buffer);
         $buffer = implode(PHP_EOL, $buffer);
 
         $this->assertEquals($assert, $buffer);
     }
 
-    public function testConsoleWithArgumentNameAndArgumentHelpMustRunScriptHelp()
+    /**
+     * @throws \Exception
+     */
+    public function testConsoleWithArgumentNameAndArgumentHelpMustRunScriptHelp(): void
     {
         //~ Mock parameters
         $mockArguments = ['bin/console', '--name=Console/Tests/MockScript', '--help'];
@@ -130,7 +139,7 @@ ASSERT;
         $buffer = ob_get_clean();
 
         //~ Remove Header & Footer with date time values
-        $buffer = explode(PHP_EOL, rtrim($buffer));
+        $buffer = explode(PHP_EOL, rtrim((string) $buffer));
         array_shift($buffer);
         array_pop($buffer);
         $buffer = implode(PHP_EOL, $buffer);
@@ -138,7 +147,10 @@ ASSERT;
         $this->assertEquals($assert, $buffer);
     }
 
-    public function testConsoleWithArgumentNameMustRunScript()
+    /**
+     * @throws \Exception
+     */
+    public function testConsoleWithArgumentNameMustRunScript(): void
     {
         //~ Mock parameters
         $mockArguments = ['bin/console', 'Console/Tests/MockScript'];
@@ -159,7 +171,7 @@ ASSERT;
         $buffer = ob_get_clean();
 
         //~ Remove Header & Footer with date time values
-        $buffer = explode(PHP_EOL, rtrim($buffer));
+        $buffer = explode(PHP_EOL, rtrim((string) $buffer));
         $beforeText = array_shift($buffer);
         array_shift($buffer);
         array_pop($buffer);
@@ -169,7 +181,10 @@ ASSERT;
         $this->assertEquals($assert, $buffer);
     }
 
-    public function testAnExceptionIsThrownWhenITryToExecuteScriptWithoutRequiredInterface()
+    /**
+     * @throws \Exception
+     */
+    public function testAnExceptionIsThrownWhenITryToExecuteScriptWithoutRequiredInterface(): void
     {
         //~ Mock parameters
         $mockArguments = ['bin/console', 'Console/Tests/MockNoScript', '--quiet'];
@@ -183,7 +198,10 @@ ASSERT;
         $console->run();
     }
 
-    public function testAnExceptionIsThrownWhenITryToExecuteNonExecutableScript()
+    /**
+     * @throws \Exception
+     */
+    public function testAnExceptionIsThrownWhenITryToExecuteNonExecutableScript(): void
     {
         //~ Mock parameters
         $mockArguments = ['bin/console', 'Console/Tests/MockNotExecutableScript', '--quiet'];
@@ -197,7 +215,10 @@ ASSERT;
         $console->run();
     }
 
-    public function testAnExceptionIsThrownWhenITryToExecuteNotExistantScript()
+    /**
+     * @throws \Exception
+     */
+    public function testAnExceptionIsThrownWhenITryToExecuteNotExistantScript(): void
     {
         //~ Mock parameters
         $mockArguments = ['bin/console', 'Console/Tests/AnyScript', '--quiet'];

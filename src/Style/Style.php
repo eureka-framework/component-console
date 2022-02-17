@@ -44,7 +44,7 @@ class Style
     /** @var string BEGIN First characters for color text. (internal constant) */
     const BEGIN = "\033[";
 
-    /** @var string END End characters for color text. (internal constant) */
+    /** @var string END Last characters for color text. (internal constant) */
     const END = 'm';
 
     /** @var string DEACTIVATE Last characters for stopping color text. (internal constant) */
@@ -88,7 +88,7 @@ class Style
      *
      * @param string $text
      */
-    public function __construct($text = '')
+    public function __construct(string $text = '')
     {
         $this->text           = $text;
         $this->isStyleEnabled = Argument::getInstance()->has('color');
@@ -102,7 +102,7 @@ class Style
      */
     public function underline(bool $isUnderline = true): self
     {
-        $this->isUnderline = (bool) $isUnderline;
+        $this->isUnderline = $isUnderline;
 
         return $this;
     }
@@ -115,7 +115,7 @@ class Style
      */
     public function bold(bool $isBold = true): self
     {
-        $this->isBold = (bool) $isBold;
+        $this->isBold = $isBold;
 
         return $this;
     }
@@ -273,9 +273,9 @@ class Style
      * @param string $text
      * @return $this
      */
-    public function setText($text = ''): self
+    public function setText(string $text = ''): self
     {
-        $this->text = (string) $text;
+        $this->text = $text;
 
         return $this;
     }

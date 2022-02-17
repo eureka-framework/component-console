@@ -50,7 +50,7 @@ abstract class AbstractScript implements ScriptInterface
      * @param  ContainerInterface|null $container
      * @return $this
      */
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null): self
     {
         $this->container = $container;
 
@@ -61,7 +61,7 @@ abstract class AbstractScript implements ScriptInterface
      * @param  string $description
      * @return $this
      */
-    public function setDescription(string $description)
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
@@ -72,7 +72,7 @@ abstract class AbstractScript implements ScriptInterface
      * @param  bool $executable
      * @return $this
      */
-    public function setExecutable(bool $executable = true)
+    public function setExecutable(bool $executable = true): self
     {
         $this->executable = $executable;
 
@@ -90,10 +90,10 @@ abstract class AbstractScript implements ScriptInterface
     }
 
     /**
-     * @return ContainerInterface
+     * @return ContainerInterface|null
      * @codeCoverageIgnore
      */
-    public function getContainer(): ContainerInterface
+    public function getContainer(): ?ContainerInterface
     {
         return $this->container;
     }

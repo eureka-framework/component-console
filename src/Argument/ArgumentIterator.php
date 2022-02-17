@@ -15,19 +15,20 @@ namespace Eureka\Component\Console\Argument;
  * Class ArgumentIterator used in Argument::parse
  *
  * @author Romain Cottard
+ * @implements \Iterator<int,string>
  */
 class ArgumentIterator implements \Iterator
 {
     /** @var int $index Current index */
     protected int $index = 0;
 
-    /** @var array $arguments List of arguments */
+    /** @var array<string> $arguments List of arguments */
     protected array $arguments = array();
 
     /**
      * Class constructor
      *
-     * @param array $args array of arguments.
+     * @param array<string> $args array of arguments.
      */
     public function __construct(array $args)
     {
@@ -36,9 +37,9 @@ class ArgumentIterator implements \Iterator
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function current()
+    public function current(): string
     {
         return $this->arguments[$this->index];
     }
@@ -46,7 +47,7 @@ class ArgumentIterator implements \Iterator
     /**
      * @return int
      */
-    public function key()
+    public function key(): int
     {
         return $this->index;
     }
@@ -54,7 +55,7 @@ class ArgumentIterator implements \Iterator
     /**
      * @return void
      */
-    public function next()
+    public function next(): void
     {
         ++$this->index;
     }
@@ -62,7 +63,7 @@ class ArgumentIterator implements \Iterator
     /**
      * @return void
      */
-    public function prev()
+    public function prev(): void
     {
         --$this->index;
     }
@@ -70,7 +71,7 @@ class ArgumentIterator implements \Iterator
     /**
      * @return void
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->index = 0;
     }
@@ -78,7 +79,7 @@ class ArgumentIterator implements \Iterator
     /**
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->arguments[$this->index]);
     }

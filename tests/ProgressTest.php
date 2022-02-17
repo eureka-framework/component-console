@@ -26,7 +26,7 @@ class ProgressTest extends TestCase
 {
     const NB_ELEMENTS = 10;
 
-    public function testProgressTypeBarWithProgressArgument()
+    public function testProgressTypeBarWithProgressArgument(): void
     {
         //~ Mock parameters
         $mockArguments = array('--progress');
@@ -52,15 +52,15 @@ class ProgressTest extends TestCase
         for ($i = 0; $i < self::NB_ELEMENTS; $i++) {
             ob_start();
             $progress->display('test');
-            $this->assertEquals($assert[$i], trim(ob_get_clean()));
+            $this->assertEquals($assert[$i], trim((string) ob_get_clean()));
         }
 
         ob_start();
         $progress->displayComplete('done');
-        $this->assertEquals('[##################################################] done', trim(ob_get_clean()));
+        $this->assertEquals('[##################################################] done', trim((string) ob_get_clean()));
     }
 
-    public function testProgressTypePercentWithProgressArgument()
+    public function testProgressTypePercentWithProgressArgument(): void
     {
         //~ Mock parameters
         $mockArguments = array('--progress');
@@ -86,11 +86,11 @@ class ProgressTest extends TestCase
         for ($i = 0; $i < self::NB_ELEMENTS; $i++) {
             ob_start();
             $progress->display('test');
-            $this->assertEquals($assert[$i], trim(ob_get_clean()));
+            $this->assertEquals($assert[$i], trim((string) ob_get_clean()));
         }
     }
 
-    public function testProgressTypeBarWithoutProgressArgument()
+    public function testProgressTypeBarWithoutProgressArgument(): void
     {
         //~ Mock parameters
         $mockArguments = array();
@@ -103,11 +103,11 @@ class ProgressTest extends TestCase
         for ($i = 0; $i < self::NB_ELEMENTS; $i++) {
             ob_start();
             $progress->display('test');
-            $this->assertEquals('', trim(ob_get_clean()));
+            $this->assertEquals('', trim((string) ob_get_clean()));
         }
     }
 
-    public function testProgressTypePercentWithoutProgressArgument()
+    public function testProgressTypePercentWithoutProgressArgument(): void
     {
         //~ Mock parameters
         $mockArguments = array();
@@ -120,11 +120,11 @@ class ProgressTest extends TestCase
         for ($i = 0; $i < self::NB_ELEMENTS; $i++) {
             ob_start();
             $progress->display('test');
-            $this->assertEquals('', trim(ob_get_clean()));
+            $this->assertEquals('', trim((string) ob_get_clean()));
         }
     }
 
-    public function testAnExceptionIsThrownWithITryToSetAnInvalidDisplayType()
+    public function testAnExceptionIsThrownWithITryToSetAnInvalidDisplayType(): void
     {
         $progress = new Progress('phpunit', self::NB_ELEMENTS);
 

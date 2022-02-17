@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
  */
 class TableTest extends TestCase
 {
-    public function testProgressTypeBarWithProgressArgument()
+    public function testProgressTypeBarWithProgressArgument(): void
     {
         $columns = [
             new Column('col1'),
@@ -38,12 +38,12 @@ class TableTest extends TestCase
         $table->addRowSpan(['1', '2', '3']);
 
         $assert = <<<ASSERT
-|----------+----------+----------|
++----------+----------+----------+
 |   col1   |   col2   |   col3   |
-|----------+----------+----------|
++----------+----------+----------+
 |    1     |    2     |    3     |
 |           1 - 2 - 3            |
-|----------+----------+----------|
++----------+----------+----------+
 ASSERT;
 
         $display = (string) $table;

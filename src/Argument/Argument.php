@@ -20,7 +20,7 @@ use Eureka\Component\Console\IO\Out;
  */
 class Argument
 {
-    /** @var array List of arguments parsed */
+    /** @var array<string|int|float|bool> List of arguments parsed */
     protected array $arguments = [];
 
     /** @var Argument|null $instance Current class instance. */
@@ -51,8 +51,8 @@ class Argument
      * Add specified argument value.
      *
      * @param  string $argument Argument name
-     * @param  mixed|null $value Value
-     * @return mixed
+     * @param  string|int|float|bool $value Value
+     * @return $this
      */
     public function add(string $argument, $value): self
     {
@@ -66,8 +66,8 @@ class Argument
      *
      * @param  string $argument Argument name
      * @param  string|null $alias Argument alias name (if exists)
-     * @param  mixed|null $default Default value if argument does not exists.
-     * @return mixed
+     * @param  string|int|float|bool|null $default Default value if argument does not exists.
+     * @return string|int|float|bool|null
      */
     public function get(string $argument, string $alias = null, $default = null)
     {
@@ -85,7 +85,7 @@ class Argument
     /**
      * Get all arguments
      *
-     * @return array
+     * @return array<string|int|float|bool>
      */
     public function getAll(): array
     {
@@ -113,7 +113,7 @@ class Argument
     /**
      * Parse argument from command lines.
      *
-     * @param array $arguments Parameter for this function is $argv global variable.
+     * @param array<string> $arguments Parameter for this function is $argv global variable.
      * @return Argument
      */
     public function parse(array $arguments): self
@@ -165,7 +165,7 @@ class Argument
 
     /**
      * @param string $name
-     * @param $value
+     * @param string|bool $value
      * @return void
      */
     private function parseFull(string $name, $value): void
@@ -184,7 +184,7 @@ class Argument
 
     /**
      * @param string $name
-     * @param $value
+     * @param string|bool $value
      * @return void
      */
     private function parseShort(string $name, $value): void

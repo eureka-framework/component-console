@@ -38,6 +38,15 @@ jobs:
           make tests
           sed -i 's+/home/runner/work/component-console/component-console+/github/workspace+g' build/reports/phpunit/clover.xml
 
+      - name: PHP 7.4 Compatibility
+        run: make php74compatibility
+
+      - name: PHP 8.1 Compatibility
+        run: make php81compatibility
+
+      - name: PHP Static Analyzis
+        run: make analyze
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v1.4
         env:

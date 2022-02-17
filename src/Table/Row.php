@@ -21,31 +21,36 @@ use Eureka\Component\Console\Style\Style;
 class Row
 {
     /** @var Cell[] $cells */
-    private array $cells = [];
-
-    /** @var bool  */
-    private bool $isBar = false;
-
-    /** @var bool  */
-    private bool $isHeader = false;
-
-    /** @var Style|null $style */
+    private array $cells;
+    private bool $isBar;
+    private int $barType;
     private ?Style $style;
+    private BorderStyle $borderStyle;
 
     /**
      * Row constructor.
      *
-     * @param array $cells
-     * @param bool $isHeader
+     * @param Cell[] $cells
+     * @param bool $isHeader @deprecated
      * @param bool $isBar
      * @param Style|null $style
+     * @param int $barType
+     * @param BorderStyle|null $borderStyle
      */
-    public function __construct(array $cells, bool $isHeader = false, bool $isBar = false, Style $style = null)
-    {
-        $this->cells    = $cells;
-        $this->isBar    = $isBar;
-        $this->isHeader = $isHeader;
-        $this->style    = $style;
+    public function __construct(  // @-phpstan-ignore-line - Ignore $isHeader unused parameter
+        array $cells,
+        bool $isHeader = false,
+        bool $isBar = false,
+        Style $style = null,
+        int $barType = BorderStyle::SIMPLE_MIDDLE,
+        BorderStyle $borderStyle = null
+    ) {
+        $this->cells   = $cells;
+        $this->isBar   = $isBar;
+        $this->style   = $style;
+        $this->barType = $barType;
+
+        $this->borderStyle = $borderStyle ?? new BorderStyle(BorderStyle::ASCII);
     }
 
     /**
@@ -59,9 +64,9 @@ class Row
             $cells[] = (string) $cell;
         }
 
-        $glue = $this->isBar ? '+' : '|';
+        [$glue, $left, $right] = $this->borderStyle->getChars($this->barType, $this->isBar);
 
-        $line = '|' . implode($glue, $cells) . '|';
+        $line = $left . implode($glue, $cells) . $right;
         if ($this->style instanceof Style) {
             $line = (string) $this->style->setText($line);
         }

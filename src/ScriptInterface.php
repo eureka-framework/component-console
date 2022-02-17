@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console;
 
+use Psr\Container\ContainerInterface;
+
 /**
  * Interface for console script launched by Eurekon console.
  *
@@ -38,6 +40,12 @@ interface ScriptInterface
      * @return void
      */
     public function help(): void;
+
+    /**
+     * @param  ContainerInterface|null $container
+     * @return static
+     */
+    public function setContainer(ContainerInterface $container = null): self;
 
     /**
      * Main method for console script.

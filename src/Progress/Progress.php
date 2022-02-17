@@ -32,7 +32,7 @@ class Progress
     /** @var int TYPE_TIME */
     const TYPE_TIME = 3;
 
-    /** @var array $typesAllowed */
+    /** @var array<int,bool> $typesAllowed */
     protected static array $typesAllowed = [
         self::TYPE_BAR => true,
         self::TYPE_PERCENT => true,
@@ -144,7 +144,7 @@ class Progress
     public function displayComplete(string $label): void
     {
         $this->currentIndex = (int) (100 / $this->percentStep);
-        $this->display($label, 1);
+        $this->display($label);
         Out::std('');
     }
 
@@ -157,7 +157,7 @@ class Progress
      */
     private function displayBar(string $label, float $percent): void
     {
-        $bar = ' [' . str_pad(str_repeat('#', (int) floor($percent / 2)), 50, ' ') . '] ' . str_pad($label, 50, ' ');
+        $bar = ' [' . str_pad(str_repeat('#', (int) floor($percent / 2)), 50) . '] ' . str_pad($label, 50);
         Out::std((string) (new Style())->color('fg', Color::GREEN)->bold()->setText($bar), "\r");
     }
 
@@ -170,7 +170,7 @@ class Progress
      */
     private function displayPercent(string $label, float $percentExact): void
     {
-        $bar = ' [' . str_pad(number_format($percentExact, 2, '.', ' '), 6, ' ', STR_PAD_LEFT) . '%] ' . str_pad($label, 50, ' ');
+        $bar = ' [' . str_pad(number_format($percentExact, 2), 6, ' ', STR_PAD_LEFT) . '%] ' . str_pad($label, 50);
         Out::std((string) (new Style())->color('fg', Color::GREEN)->bold()->setText($bar), "\r");
     }
 
@@ -201,7 +201,7 @@ class Progress
                 ->setText(str_pad((string) $this->elapsedTime, 5, ' ', STR_PAD_LEFT))
                 ->color('fg', Color::GREEN)
                 ->highlight('fg');
-            $timeLeft     = round((($this->elapsedTime * 100) / $percentExact), 0) - $this->elapsedTime;
+            $timeLeft     = round((($this->elapsedTime * 100) / $percentExact)) - $this->elapsedTime;
             $timeLeftText = (string) $style->reset()
                 ->setText(str_pad((string)$timeLeft, 5, ' ', STR_PAD_LEFT))
                 ->color('fg', Color::GREEN)
@@ -228,7 +228,7 @@ class Progress
         }
 
         $percent     = floor($this->currentIndex * $this->percentStep);
-        $style       = new Style(str_pad($percent, 3, ' ', STR_PAD_LEFT) . '%');
+        $style       = new Style(str_pad((string) $percent, 3, ' ', STR_PAD_LEFT) . '%');
         $percentText = (string) $style->color('fg', Color::GREEN)->highlight('fg');
 
         $this->completed = true;

@@ -12,7 +12,9 @@ declare(strict_types=1);
 namespace Eureka\Component\Console;
 
 use Eureka\Component\Console\Exception\StopAfterHelpException;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 
@@ -40,13 +42,13 @@ class Console
     /** @var int $exitCode Exit code script. */
     protected int $exitCode = 0;
 
-    /** @var array $baseNamespaces Base namespaces for scripts class to execute. */
+    /** @var array<string> $baseNamespaces Base namespaces for scripts class to execute. */
     protected array $baseNamespaces = ['Eureka\Component'];
 
     /**
      * Class constructor.
      *
-     * @param array $args List of arguments for current script to execute.
+     * @param array<string> $args List of arguments for current script to execute.
      * @param ContainerInterface|null $container
      * @param LoggerInterface|null $logger
      */
@@ -95,13 +97,13 @@ class Console
         IO\Out::std('');
 
         $help = new Help('...');
-        $help->addArgument('', 'color', 'Activate colors (do not activate when redirect output in log file, colors are non-printable chars)', false, false);
-        $help->addArgument('', 'debug', 'Activate debug mode (trace on exception if script is terminated with an exception)', false, false);
-        $help->addArgument('', 'time-limit', 'Specified time limit in seconds (default: 0 - unlimited)', true, false);
-        $help->addArgument('', 'memory-limit', 'Specified memory limit (128M, 1024M, 4G... - default: 256M)', true, false);
-        $help->addArgument('', 'error-reporting', 'Specified value for error-reporting (default: -1 - all)', true, false);
-        $help->addArgument('', 'error-display', 'Specified value for display_errors setting. Values: 0|1 Default: 1 (display)', true, false);
-        $help->addArgument('', 'quiet', 'Force disabled console lib messages (header, footer, timer...)', false, false);
+        $help->addArgument('', 'color', 'Activate colors (do not activate when redirect output in log file, colors are non-printable chars)');
+        $help->addArgument('', 'debug', 'Activate debug mode (trace on exception if script is terminated with an exception)');
+        $help->addArgument('', 'time-limit', 'Specified time limit in seconds (default: 0 - unlimited)', true);
+        $help->addArgument('', 'memory-limit', 'Specified memory limit (128M, 1024M, 4G... - default: 256M)', true);
+        $help->addArgument('', 'error-reporting', 'Specified value for error-reporting (default: -1 - all)', true);
+        $help->addArgument('', 'error-display', 'Specified value for display_errors setting. Values: 0|1 Default: 1 (display)', true);
+        $help->addArgument('', 'quiet', 'Force disabled console lib messages (header, footer, timer...)');
         $help->addArgument('', 'name', 'Console class script to run (Example: Database/Console)', true, true);
 
         $help->display();
@@ -170,6 +172,8 @@ class Console
      * - OR execute script
      *
      * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws \Exception
      */
     public function run(): void
@@ -269,12 +273,12 @@ class Console
     {
         $name = $this->argument->get('name', null, '');
 
-        //~ Try to get default argument value if exist, to use it as a name.
+        //~ Try to get default argument value if exists, to use it as a name.
         if (empty($name)) {
             $name = $this->argument->get('__default__', null, '');
         }
 
-        $scriptName = str_replace('/', '\\', ucwords($name, '/\\'));
+        $scriptName = str_replace('/', '\\', ucwords((string) $name, '/\\'));
 
         // ~ Hook for console help
         if (empty($scriptName)) {
@@ -320,7 +324,8 @@ class Console
      *
      * @param string $scriptName
      * @return ScriptInterface
-     * @throws \LogicException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function getScriptInstance(string $scriptName): ScriptInterface
     {

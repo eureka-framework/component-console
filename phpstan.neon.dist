@@ -1,0 +1,12 @@
+parameters:
+  phpVersion: 70400 # PHP 7.4 - Current minimal version supported
+  level: max
+  paths:
+    - ./src
+    - ./tests
+
+  bootstrapFiles:
+    - ./vendor/autoload.php
+
+  ignoreErrors:
+    - '#Constructor of class Eureka\\Component\\Console\\Table\\Row has an unused parameter \$isHeader.#'
