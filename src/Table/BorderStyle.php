@@ -44,11 +44,13 @@ class BorderStyle
     public const DOUBLE_MIDDLE_SPAN_BOTTOM = 7;
     public const DOUBLE_MIDDLE_SPAN_BOTH   = 8;
     public const SIMPLE_TOP                = 9;
-    public const SIMPLE_BOTTOM             = 10;
-    public const SIMPLE_MIDDLE             = 11;
-    public const SIMPLE_MIDDLE_SPAN_TOP    = 12;
-    public const SIMPLE_MIDDLE_SPAN_BOTTOM = 13;
-    public const SIMPLE_MIDDLE_SPAN_BOTH   = 14;
+    public const SIMPLE_TOP_SPAN           = 10;
+    public const SIMPLE_BOTTOM             = 11;
+    public const SIMPLE_BOTTOM_SPAN        = 12;
+    public const SIMPLE_MIDDLE             = 13;
+    public const SIMPLE_MIDDLE_SPAN_TOP    = 14;
+    public const SIMPLE_MIDDLE_SPAN_BOTTOM = 15;
+    public const SIMPLE_MIDDLE_SPAN_BOTH   = 16;
 
     public const BORDERS = [
         self::UNICODE + self::DOUBLE + self::TOP + self::LEFT                 => '╔',
@@ -75,6 +77,10 @@ class BorderStyle
         self::UNICODE + self::SIMPLE + self::VERTICAL + self::RIGHT           => '┤',
         self::UNICODE + self::SIMPLE + self::MIDDLE                           => '┼',
 
+        self::UNICODE + self::MIXED + self::TOP + self::LEFT                  => '╒',
+        self::UNICODE + self::MIXED + self::TOP + self::RIGHT                 => '╕',
+        self::UNICODE + self::MIXED + self::BOTTOM + self::LEFT               => '╘',
+        self::UNICODE + self::MIXED + self::BOTTOM + self::RIGHT              => '╛',
         self::UNICODE + self::MIXED + self::HORIZONTAL + self::TOP            => '╤',
         self::UNICODE + self::MIXED + self::HORIZONTAL + self::BOTTOM         => '╧',
         self::UNICODE + self::MIXED + self::VERTICAL + self::LEFT             => '╟',
@@ -234,8 +240,18 @@ class BorderStyle
                 $left  = $this->getTopLeft(BorderStyle::MIXED);
                 $right = $this->getTopRight(BorderStyle::MIXED);
                 break;
+            case BorderStyle::SIMPLE_TOP_SPAN:
+                $glue  = $this->getHorizontal(BorderStyle::SIMPLE);
+                $left  = $this->getTopLeft(BorderStyle::MIXED);
+                $right = $this->getTopRight(BorderStyle::MIXED);
+                break;
             case BorderStyle::SIMPLE_BOTTOM:
                 $glue  = $this->getHorizontalBottom(BorderStyle::SIMPLE);
+                $left  = $this->getBottomLeft(BorderStyle::MIXED);
+                $right = $this->getBottomRight(BorderStyle::MIXED);
+                break;
+            case BorderStyle::SIMPLE_BOTTOM_SPAN:
+                $glue  = $this->getHorizontal(BorderStyle::SIMPLE);
                 $left  = $this->getBottomLeft(BorderStyle::MIXED);
                 $right = $this->getBottomRight(BorderStyle::MIXED);
                 break;

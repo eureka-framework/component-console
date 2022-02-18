@@ -24,7 +24,7 @@ class Table
     /** @var Row[] $rows */
     private array $rows;
 
-    /** @var Column[]  */
+    /** @var Column[] $columns */
     private array $columns;
 
     private int $borderRendering;
@@ -66,14 +66,23 @@ class Table
             $cells[] = new Cell($column->getName(), $column->getSize(), $column->getAlign());
         }
 
-        $this->add(new Row($cells, true));
+        $this->add(
+            new Row(
+                $cells,
+                true,
+                false,
+                null,
+                BorderStyle::SIMPLE_MIDDLE,
+                new BorderStyle($this->borderRendering)
+            )
+        );
         $this->addBar(BorderStyle::DOUBLE_MIDDLE);
 
         return $this;
     }
 
     /**
-     * @param  Row $row
+     * @param Row $row
      * @return Table
      */
     public function add(Row $row): self
@@ -98,11 +107,20 @@ class Table
         }
 
         foreach ($data as $index => $value) {
-            $column = $this->getColumn($index);
+            $column  = $this->getColumn($index);
             $cells[] = new Cell($value, $column->getSize(), $column->getAlign());
         }
 
-        $this->add(new Row($cells, $isHeader, false, $style));
+        $this->add(
+            new Row(
+                $cells,
+                $isHeader,
+                false,
+                $style,
+                BorderStyle::SIMPLE_MIDDLE,
+                new BorderStyle($this->borderRendering)
+            )
+        );
 
         if ($isHeader) {
             $this->addBar(); // @codeCoverageIgnore
@@ -114,9 +132,10 @@ class Table
     /**
      * @param array<int,string> $data
      * @param bool $isHeader
+     * @param Style|null $style
      * @return Table
      */
-    public function addRowSpan(array $data, bool $isHeader = false): self
+    public function addRowSpan(array $data, bool $isHeader = false, Style $style = null): self
     {
         if ($isHeader) {
             $this->addBar(BorderStyle::DOUBLE_MIDDLE_SPAN_BOTTOM); // @codeCoverageIgnore
@@ -127,8 +146,16 @@ class Table
             $size += $column->getSize();
         }
 
-        $this->add(new Row([new Cell(implode(' - ', $data), $size, Cell::ALIGN_CENTER)], $isHeader));
-
+        $this->add(
+            new Row(
+                [new Cell(implode(' - ', $data), $size, Cell::ALIGN_CENTER)],
+                $isHeader,
+                false,
+                $style,
+                BorderStyle::SIMPLE_MIDDLE,
+                new BorderStyle($this->borderRendering)
+            )
+        );
 
         if ($isHeader) {
             $this->addBar(BorderStyle::SIMPLE_MIDDLE_SPAN_TOP); // @codeCoverageIgnore
@@ -137,10 +164,6 @@ class Table
         return $this;
     }
 
-    /**
-     * @param int $borderType
-     * @return Table
-     */
     public function addBar(int $borderType = BorderStyle::SIMPLE_MIDDLE): self
     {
         $borderStyle = new BorderStyle($this->borderRendering);
@@ -162,7 +185,12 @@ class Table
 
         $cells = [];
         foreach ($this->columns as $column) {
-            $cells[] = new Cell(self::strPadUnicode('', $column->getSize(), $padString), $column->getSize(), Cell::ALIGN_CENTER, false);
+            $cells[] = new Cell(
+                self::strPadUnicode('', $column->getSize(), $padString),
+                $column->getSize(),
+                Cell::ALIGN_CENTER,
+                false
+            );
         }
 
         $this->add(new Row($cells, false, true, null, $borderType, $borderStyle));
@@ -224,10 +252,10 @@ class Table
         if ($dir == STR_PAD_RIGHT) {
             $result = $string . str_repeat($padString, $repeat);
             $result = mb_substr($result, 0, $padLength);
-        } else if ($dir == STR_PAD_LEFT) {
+        } elseif ($dir == STR_PAD_LEFT) {
             $result = str_repeat($padString, $repeat) . $string;
             $result = mb_substr($result, -$padLength);
-        } else if ($dir == STR_PAD_BOTH) {
+        } elseif ($dir == STR_PAD_BOTH) {
             $length = ($padLength - $stringLength) / 2;
             $repeat = (int) ceil($length / $padStringLength);
             $result = mb_substr(str_repeat($padString, $repeat), 0, (int) floor($length))
