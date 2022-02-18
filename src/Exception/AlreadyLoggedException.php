@@ -7,7 +7,8 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1); // @codeCoverageIgnore
+// @codeCoverageIgnore
+declare(strict_types=1);
 
 namespace Eureka\Component\Console\Exception;
 

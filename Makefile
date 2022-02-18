@@ -1,4 +1,4 @@
-.PHONY: install update phpcs phpcbf php74compatibility php81compatibility phpstan tests testdox ci clean
+.PHONY: validate install update phpcs phpcbf php74compatibility php81compatibility phpstan analyze tests testdox ci clean
 
 PHP_FILES := $(shell find src tests -type f -name '*.php')
 define header =
