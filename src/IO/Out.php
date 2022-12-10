@@ -68,4 +68,13 @@ class Out
             }
         }
     }
+
+    /**
+     * @return void
+     * @codeCoverageIgnore
+     */
+    public static function clear(): void
+    {
+        fwrite(STDOUT, "\x1b[H\x1b[J");
+    }
 }
