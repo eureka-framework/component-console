@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ----
 
+## [5.2.0] - 2022-02-18
+[5.2.0]: https://github.com/eureka-framework/component-console/compare/5.1.0...5.2.0
+### Added
+ * Add Out::clear() to clear current term screen
+
 ## [5.1.0] - 2022-02-18
 [5.1.0]: https://github.com/eureka-framework/component-console/compare/5.0.0...5.1.0
 ### Changed
