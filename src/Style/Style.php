@@ -54,7 +54,7 @@ class Style
     protected string $foregroundColor = Color::WHITE;
 
     /** @var string $foregroundColor Foreground color character */
-    protected string $backgroundColor = Color::BLACK;
+    protected string $backgroundColor = '';
 
     /** @var string $text Text to style */
     protected string $text = '';
@@ -226,9 +226,12 @@ class Style
         }
 
         $text = '';
-        if ($this->foregroundColor !== '') {
+        if ($this->foregroundColor !== '' || $this->isBold || $this->isUnderline || $this->hasHighlightedForeground) {
+            $highlight = '';
             //~ Highlight
-            $highlight = $this->hasHighlightedForeground ? static::HIGH_FOREGROUND : static::REGULAR_FOREGROUND;
+            if ($this->foregroundColor !== '') {
+                $highlight = $this->hasHighlightedForeground ? static::HIGH_FOREGROUND : static::REGULAR_FOREGROUND;
+            }
 
             //~ Decoration
             $decoration  = $this->isBold ? static::DECORATION_BOLD : '';
@@ -239,9 +242,12 @@ class Style
             $text .= self::BEGIN . $decoration . $highlight . $this->foregroundColor . self::END;
         }
 
-        if ($this->backgroundColor !== '') {
-            $highlight = $this->hasHighlightedBackground ? static::HIGH_BACKGROUND : static::REGULAR_BACKGROUND;
-            $text     .= self::BEGIN . $highlight . $this->backgroundColor . self::END;
+        if ($this->backgroundColor !== '' || $this->hasHighlightedBackground) {
+            $highlight = '';
+            if ($this->backgroundColor !== '') {
+                $highlight = $this->hasHighlightedBackground ? static::HIGH_BACKGROUND : static::REGULAR_BACKGROUND;
+            }
+            $text .= self::BEGIN . $highlight . $this->backgroundColor . self::END;
         }
 
         return $text . $textDisplay . self::DEACTIVATE;
@@ -258,7 +264,7 @@ class Style
         $this->isUnderline              = false;
         $this->hasHighlightedBackground = false;
         $this->hasHighlightedForeground = false;
-        $this->backgroundColor          = Color::BLACK;
+        $this->backgroundColor          = '';
         $this->foregroundColor          = Color::WHITE;
         $this->padNb                    = 0;
         $this->padChar                  = ' ';

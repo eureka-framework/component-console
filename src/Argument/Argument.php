@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Argument;
 
-use Eureka\Component\Console\IO\Out;
-
 /**
  * Class to access and use arguments from command line in PHP CLI scripts.
  *

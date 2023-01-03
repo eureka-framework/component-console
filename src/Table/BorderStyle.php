@@ -182,6 +182,8 @@ class BorderStyle
     }
 
     /**
+     * @param int $barType
+     * @param bool $isBar
      * @return array<string>
      */
     public function getChars(int $barType, bool $isBar): array

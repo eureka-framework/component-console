@@ -40,14 +40,16 @@ class Out
      * @return void
      * @codeCoverageIgnore
      */
-    public static function err($message, string $endLine = PHP_EOL)
+    public static function err($message, string $endLine = PHP_EOL): void
     {
-        if (!Argument::getInstance()->has('quiet')) {
-            if (self::$allowBuffering) {
-                echo $message . $endLine;
-            } else {
-                fwrite(STDERR, (string) $message . $endLine);
-            }
+        if (Argument::getInstance()->has('quiet')) {
+            return;
+        }
+
+        if (self::$allowBuffering) {
+            echo $message . $endLine;
+        } else {
+            fwrite(STDERR, (string) $message . $endLine);
         }
     }
 
@@ -58,14 +60,16 @@ class Out
      * @param string $endLine
      * @return void
      */
-    public static function std($message, string $endLine = PHP_EOL)
+    public static function std($message, string $endLine = PHP_EOL): void
     {
-        if (!Argument::getInstance()->has('quiet')) {
-            if (self::$allowBuffering) {
-                echo $message . $endLine;
-            } else {
-                fwrite(STDOUT, (string) $message . $endLine); // @codeCoverageIgnore
-            }
+        if (Argument::getInstance()->has('quiet')) {
+            return;
+        }
+
+        if (self::$allowBuffering) {
+            echo $message . $endLine;
+        } else {
+            fwrite(STDOUT, (string) $message . $endLine); // @codeCoverageIgnore
         }
     }
 

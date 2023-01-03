@@ -1,7 +1,7 @@
 # Component Console (formerly [Eurekon](https://github.com/eureka-framework/Eurekon))
 
 [![Current version](https://img.shields.io/packagist/v/eureka/component-console.svg?logo=composer)](https://packagist.org/packages/eureka/component-console)
-[![Supported PHP version](https://img.shields.io/static/v1?logo=php&label=PHP&message=%5E7.4&color=777bb4)](https://packagist.org/packages/eureka/component-console)
+[![Supported PHP version](https://img.shields.io/static/v1?logo=php&label=PHP&message=7.4|8.0|8.1|8.2&color=777bb4)](https://packagist.org/packages/eureka/component-console)
 ![CI](https://github.com/eureka-framework/component-console/workflows/CI/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=eureka-framework_component-console&metric=alert_status)](https://sonarcloud.io/dashboard?id=eureka-framework_component-console)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=eureka-framework_component-console&metric=coverage)](https://sonarcloud.io/dashboard?id=eureka-framework_component-console)
@@ -19,6 +19,7 @@ Console have some defined classes to help you to do a lot of beautiful script.
 my-app/$ vendor/bin/console --name="My\Class\Name"
 my-app/$ vendor/bin/console --name=My/Class/Script
 my-app/$ vendor/bin/console My/Class/Script
+my-app/$ vendor/bin/console my/class/script # first character of each part can omit upper case
 ```
 
 ## Documentation
@@ -74,7 +75,7 @@ class ExampleScript extends AbstractScript implements ScriptInterface
         $user = $arguments->get('user', 'u', 'joe doe');
         $say  = $arguments->has('is-night') ? 'Good night' : 'Hello';
 
-        Out::std("${say} ${user}!");
+        Out::std("$say $user!");
     }
 }
 ```
@@ -138,7 +139,7 @@ To capture the output (with ob_start()), you need to allow buffering.
 When you activate the buffering, the basic "echo" is used instead of write on STDOUT / STDERR.
 
 ```php
-Out::allowBuffering(true); // 
+Out::allowBuffering(true);
 ```
 
 
@@ -267,10 +268,6 @@ At the end:
 ```
 
 ## About
-
-### Requirements
-
-- Works with PHP 7.4 or above
 
 ### License
 

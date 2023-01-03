@@ -32,7 +32,7 @@ class Progress
     /** @var int TYPE_TIME */
     const TYPE_TIME = 3;
 
-    /** @var array<int,bool> $typesAllowed */
+    /** @var array<int, bool> $typesAllowed */
     protected static array $typesAllowed = [
         self::TYPE_BAR => true,
         self::TYPE_PERCENT => true,
@@ -208,11 +208,13 @@ class Progress
                 ->highlight('fg');
         }
 
-        Out::std('  > ' . $this->globalName . ' - [' . $percentText . ']' . ' [' . $timeDoneText . '/' . $timeLeftText . ' sec] - ' . str_pad($label, 80), "\r");
+        $label = str_pad($label, 80);
+        Out::std("  > $this->globalName - [$percentText] [$timeDoneText/$timeLeftText sec] - $label", "\r");
 
         if ($percent >= 100) {
             $this->completed = true;
-            Out::std('  > ' . $this->globalName . ' - [' . $percentText . '] - ' . str_pad('done !', 80));
+            $label =  str_pad('done !', 80);
+            Out::std("  > $this->globalName - [$percentText] - $label");
         }
     }
 

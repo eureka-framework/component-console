@@ -22,16 +22,9 @@ class Cell
     const ALIGN_LEFT   = STR_PAD_RIGHT;
     const ALIGN_RIGHT  = STR_PAD_LEFT;
 
-    /** @var string  */
-    private string $content = '';
-
-    /** @var int  */
-    private int $size = 10;
-
-    /** @var int  */
-    private int $align = Cell::ALIGN_CENTER;
-
-    /** @var bool $paddingSpace */
+    private string $content;
+    private int $size;
+    private int $align;
     private bool $paddingSpace;
 
     /**
@@ -61,7 +54,7 @@ class Cell
     {
         $content = $this->paddingSpace ? ' ' . $this->content . ' ' : $this->content;
 
-        return (string) str_pad($content, $this->size, ' ', $this->align);
+        return str_pad($content, $this->size, ' ', $this->align);
     }
 
     /**

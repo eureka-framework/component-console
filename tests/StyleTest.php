@@ -37,7 +37,10 @@ class StyleTest extends TestCase
         //~ Set style
         $style = (new Style())->bold();
 
-        $this->assertEquals("\033[1;37m\033[40mThis is my text\033[0m", (string) $style->setText('This is my text'));
+        $this->assertEquals(
+            "\033[1;37mThis is my text\033[0m",
+            (string) $style->setText('This is my text')
+        );
     }
 
     /**
@@ -53,7 +56,10 @@ class StyleTest extends TestCase
         //~ Set style
         $style = (new Style())->underline();
 
-        $this->assertEquals("\033[4;37m\033[40mThis is my text\033[0m", (string) $style->setText('This is my text'));
+        $this->assertEquals(
+            "\033[4;37mThis is my text\033[0m",
+            (string) $style->setText('This is my text')
+        );
     }
 
     /**
@@ -69,7 +75,10 @@ class StyleTest extends TestCase
         //~ Set style
         $style = (new Style())->bold()->underline() ;
 
-        $this->assertEquals("\033[1;4;37m\033[40mThis is my text\033[0m", (string) $style->setText('This is my text'));
+        $this->assertEquals(
+            "\033[1;4;37mThis is my text\033[0m",
+            (string) $style->setText('This is my text')
+        );
     }
 
     /**
@@ -85,7 +94,10 @@ class StyleTest extends TestCase
         //~ Set style
         $style = (new Style())->color('bg', Color::GREEN)->color('fg', Color::BLACK);
 
-        $this->assertEquals("\033[0;30m\033[42mThis is my text\033[0m", (string) $style->setText('This is my text'));
+        $this->assertEquals(
+            "\033[0;30m\033[42mThis is my text\033[0m",
+            (string) $style->setText('This is my text')
+        );
     }
 
     /**
@@ -101,7 +113,10 @@ class StyleTest extends TestCase
         //~ Set style
         $style = (new Style())->color('fg', Color::RED)->bold()->underline();
 
-        $this->assertEquals("\033[1;4;31m\033[40mThis is my text\033[0m", (string) $style->setText('This is my text'));
+        $this->assertEquals(
+            "\033[1;4;31mThis is my text\033[0m",
+            (string) $style->setText('This is my text')
+        );
     }
 
     /**
@@ -117,7 +132,10 @@ class StyleTest extends TestCase
         //~ Set style
         $style = (new Style())->color('fg', Color::RED)->bold(false)->underline();
 
-        $this->assertEquals("\033[4;31m\033[40mThis is my text\033[0m", (string) $style->setText('This is my text'));
+        $this->assertEquals(
+            "\033[4;31mThis is my text\033[0m",
+            (string) $style->setText('This is my text')
+        );
     }
 
     /**
@@ -133,7 +151,10 @@ class StyleTest extends TestCase
         //~ Set style
         $style = (new Style())->color('fg', Color::RED)->bold()->highlight('fg');
 
-        $this->assertEquals("\033[1;91m\033[40mThis is my text\033[0m", (string) $style->setText('This is my text'));
+        $this->assertEquals(
+            "\033[1;91mThis is my text\033[0m",
+            (string) $style->setText('This is my text')
+        );
     }
 
     /**
@@ -149,7 +170,10 @@ class StyleTest extends TestCase
         //~ Set style
         $style = (new Style())->color('bg', Color::YELLOW)->highlight('bg');
 
-        $this->assertEquals("\033[0;37m\033[103mThis is my text\033[0m", (string) $style->setText('This is my text'));
+        $this->assertEquals(
+            "\033[0;37m\033[103mThis is my text\033[0m",
+            (string) $style->setText('This is my text')
+        );
     }
 
     /**
@@ -165,7 +189,10 @@ class StyleTest extends TestCase
         //~ Set style
         $style = (new Style())->color('bg', Color::YELLOW)->highlight('fg');
 
-        $this->assertEquals("\033[0;97m\033[43mThis is my text\033[0m", (string) $style->setText('This is my text'));
+        $this->assertEquals(
+            "\033[0;97m\033[43mThis is my text\033[0m",
+            (string) $style->setText('This is my text')
+        );
     }
 
     /**

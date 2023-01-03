@@ -18,14 +18,9 @@ namespace Eureka\Component\Console\Table;
  */
 class Column
 {
-    /** @var string $name */
-    private string $name = '';
-
-    /** @var int $size */
-    private int $size = 10;
-
-    /** @var int $align */
-    private int $align = Cell::ALIGN_CENTER;
+    private string $name;
+    private int $size;
+    private int $align;
 
     /**
      * Column constructor.

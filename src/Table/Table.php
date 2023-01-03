@@ -93,7 +93,7 @@ class Table
     }
 
     /**
-     * @param array<int,string> $data
+     * @param array<string> $data
      * @param bool $isHeader
      * @param Style|null $style
      * @return Table
@@ -130,7 +130,7 @@ class Table
     }
 
     /**
-     * @param array<int,string> $data
+     * @param array<string> $data
      * @param bool $isHeader
      * @param Style|null $style
      * @return Table

@@ -14,7 +14,7 @@ namespace Eureka\Component\Console;
 use Psr\Container\ContainerInterface;
 
 /**
- * Interface for console script launched by Eurekon console.
+ * Interface for console script launched by component console.
  *
  * @author  Romain Cottard
  */

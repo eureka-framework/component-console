@@ -53,9 +53,6 @@ class Row
         $this->borderStyle = $borderStyle ?? new BorderStyle(BorderStyle::ASCII);
     }
 
-    /**
-     * @return string
-     */
     public function render(): string
     {
         $cells = [];
@@ -74,9 +71,6 @@ class Row
         return $line;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->render();

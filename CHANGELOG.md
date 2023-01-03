@@ -17,7 +17,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ----
 
-## [5.2.0] - 2022-02-18
+## [5.3.0] - 2023-01-03
+[5.3.0]: https://github.com/eureka-framework/component-console/compare/5.2.0...5.3.0
+### Added
+ * Style: no more BLACK background as default
+ * Some minor fix in phpdoc & types
+ * Add php 8.2 compatibility check
+ * Update GitHub action workflow
+
+## [5.2.0] - 2022-12-15
 [5.2.0]: https://github.com/eureka-framework/component-console/compare/5.1.0...5.2.0
 ### Added
  * Add Out::clear() to clear current term screen
