@@ -12,9 +12,18 @@ declare(strict_types=1);
 namespace Eureka\Component\Console;
 
 use Eureka\Component\Console\Exception\StopAfterHelpException;
+use Eureka\Component\Console\Input\InputInterface;
+use Eureka\Component\Console\Input\StreamInput;
+use Eureka\Component\Console\Option\Option;
+use Eureka\Component\Console\Option\OptionParser;
+use Eureka\Component\Console\Option\Options;
+use Eureka\Component\Console\Output\OutputInterface;
+use Eureka\Component\Console\Output\StreamOutput;
+use Eureka\Component\Console\Terminal\Terminal;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 
@@ -23,43 +32,52 @@ use Psr\Log\LoggerInterface;
  *
  * @author Romain Cottard
  */
-class Console
+class Console implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    /** @var float $time Timer for script */
     protected float $time = 0.0;
+
+    private Options $options;
 
     /** @var bool $isVerbose Set true to display header/footer script message (name, time...) */
     protected bool $isVerbose = true;
 
-    /** @var Argument\Argument $argument Argument object */
-    protected Argument\Argument $argument;
-
-    /** @var ContainerInterface|null */
     protected ?ContainerInterface $container = null;
 
-    /** @var int $exitCode Exit code script. */
     protected int $exitCode = 0;
+
+    private Terminal $terminal;
+    private InputInterface $input;
+
+    private OutputInterface $output;
+    private OutputInterface $outputErr;
 
     /** @var array<string> $baseNamespaces Base namespaces for scripts class to execute. */
     protected array $baseNamespaces = ['Eureka\Component'];
 
     /**
-     * Class constructor.
-     *
-     * @param array<string> $args List of arguments for current script to execute.
-     * @param ContainerInterface|null $container
-     * @param LoggerInterface|null $logger
+     * @param array<string, string> $args List of arguments for current script to execute.
+     * @param StreamInput|null $input
+     * @param StreamOutput|null $output
+     * @param StreamOutput|null $outputErr
      */
-    public function __construct(array $args, ContainerInterface $container = null, LoggerInterface $logger = null)
-    {
-        $this->argument  = Argument\Argument::getInstance()->parse($args);
-        $this->container = $container;
+    public function __construct(
+        array $args,
+        ?StreamInput $input = null,
+        ?StreamOutput $output = null,
+        ?StreamOutput $outputErr = null
+    ) {
+        $this->options = $this->initOptions();
+        $this->options = (new OptionParser($this->options))->parse($args);
 
-        if ($logger !== null) {
-            $this->setLogger($logger);
-        }
+        $isQuiet = (bool) $this->options->get('quiet')->getArgument();
+
+        $this->input     = $input ?? new StreamInput(\STDIN);
+        $this->output    = $output ?? new StreamOutput(\STDOUT, $isQuiet);
+        $this->outputErr = $outputErr ?? new StreamOutput(\STDERR, $isQuiet);
+
+        $this->terminal  = new Terminal($this->output);
     }
 
     /**
@@ -72,8 +90,9 @@ class Console
 
     /**
      * Set base namespaces.
+     * Those namespaces will be added as prefix to script name to autoload it.
      *
-     * @param  string[] $baseNamespaces
+     * @param array<int, string> $baseNamespaces
      * @return $this
      */
     public function setBaseNamespaces(array $baseNamespaces = []): self
@@ -85,28 +104,90 @@ class Console
         return $this;
     }
 
+    private function initOptions(): Options
+    {
+        return (new Options())
+            ->add(
+                new Option(
+                    shortName:   'h',
+                    longName:    'help',
+                    description: 'Display Help',
+                )
+            )
+            ->add(
+                new Option(
+                    longName:    'no-color',
+                    description: 'Disable colors / styling (Can also be disabled with NO_COLOR env var)',
+                )
+            )
+            ->add(
+                new Option(
+                    longName:    'debug',
+                    description: 'Activate debug mode (trace on exception if script is terminated with an exception)',
+                    default:     false,
+                )
+            )
+            ->add(
+                new Option(
+                    longName:    'time-limit',
+                    description: 'Specified time limit in seconds (default: 0 - unlimited)',
+                    hasArgument: true,
+                    default:     0,
+                )
+            )
+            ->add(
+                new Option(
+                    longName:    'memory-limit',
+                    description: 'Specified memory limit (128M, 1024M, 4G... - default: 256M)',
+                    hasArgument: true,
+                    default:     '256M',
+                )
+            )
+            ->add(
+                new Option(
+                    longName:    'error-reporting',
+                    description: 'Specified value for error-reporting (default: -1 - all)',
+                    hasArgument: true,
+                    default:     -1,
+                )
+            )
+            ->add(
+                new Option(
+                    longName:    'error-display',
+                    description: 'Specified value for display_errors setting. Values: 0|1 Default: 1 (display)',
+                    hasArgument: true,
+                    default:     1,
+                )
+            )
+            ->add(
+                new Option(
+                    longName:    'quiet',
+                    description: 'Force disabled console lib messages (header, footer, timer...)',
+                    default:     false,
+                )
+            )
+            ->add(
+                new Option(
+                    longName:    'name',
+                    description: 'Console class script to run (Example: database/console)',
+                    mandatory:   true,
+                    hasArgument: true,
+                )
+            )
+        ;
+    }
+
     /**
      * Display console lib help
      *
      * @return void
      */
-    protected function help(): void
+    private function help(): void
     {
-        $style = new Style\Style(' *** RUN - HELP ***');
-        IO\Out::std($style->colorForeground(Style\Color::GREEN)->get());
-        IO\Out::std('');
+        $this->output->writeln(' *** RUN - HELP ***');
+        $this->output->writeln('');
 
-        $help = new Help('...');
-        $help->addArgument('', 'color', 'Activate colors (do not activate when redirect output in log file, colors are non-printable chars)');
-        $help->addArgument('', 'debug', 'Activate debug mode (trace on exception if script is terminated with an exception)');
-        $help->addArgument('', 'time-limit', 'Specified time limit in seconds (default: 0 - unlimited)', true);
-        $help->addArgument('', 'memory-limit', 'Specified memory limit (128M, 1024M, 4G... - default: 256M)', true);
-        $help->addArgument('', 'error-reporting', 'Specified value for error-reporting (default: -1 - all)', true);
-        $help->addArgument('', 'error-display', 'Specified value for display_errors setting. Values: 0|1 Default: 1 (display)', true);
-        $help->addArgument('', 'quiet', 'Force disabled console lib messages (header, footer, timer...)');
-        $help->addArgument('', 'name', 'Console class script to run (Example: Database/Console)', true, true);
-
-        $help->display();
+        (new Help('...', $this->options, $this->output))->display();
     }
 
     /**
@@ -120,20 +201,20 @@ class Console
      */
     public function before(): void
     {
-        // ~ Init timer
+        //~ Init timer
         $this->time = -microtime(true);
 
-        // ~ Reporting all error (default: all error) !
-        error_reporting((int) $this->argument->get('error-reporting', null, - 1));
-        ini_set('display_errors', (string) ((int) $this->argument->get('error-display', null, 1)));
+        //~ Reporting all error (default: all error) !
+        error_reporting((int) $this->options->get('error-reporting')->getArgument());
+        ini_set('display_errors', (string) ((int) $this->options->get('error-display')->getArgument()));
 
-        // ~ Set limit time to 0 (default: unlimited) !
-        set_time_limit((int) $this->argument->get('time-limit', null, 0));
+        //~ Set limit time to 0 (default: unlimited) !
+        set_time_limit((int) $this->options->get('time-limit')->getArgument());
 
-        // Set memory limit
-        ini_set('memory_limit', (string) $this->argument->get('memory-limit', null, '256M'));
+        //~ Set memory limit
+        ini_set('memory_limit', (string) $this->options->get('memory-limit')->getArgument());
 
-        $this->isVerbose = !$this->argument->has('quiet');
+        $this->isVerbose = !$this->options->get('quiet')->getArgument();
     }
 
     /**
@@ -149,18 +230,19 @@ class Console
         $style = new Style\Style(' *** END SCRIPT - Time taken: ' . round($this->time, 2) . 's - ' . date('Y-m-d H:i:s') . ' ***');
         $style->color('fg', Style\Color::GREEN);
 
-        if (!$this->argument->has('script-no-header')) {
-            IO\Out::std($style->get());
+        if (!$this->arguments->has('script-no-header')) {
+            Output\StreamOutput::std($style->get());
         }
     }
 
     /**
      * Terminate script with correct execution code.
      *
-     * @return void
+     * @return never
      * @codeCoverageIgnore
      */
-    public function terminate(): void
+    public function terminate(): never
+
     {
         exit($this->exitCode);
     }
@@ -204,9 +286,9 @@ class Console
 
             $style = new Style\Style(' ~~ EXCEPTION[' . $exception->getCode() . ']: ' . $exception->getMessage());
             $style->color('bg', Style\Color::RED);
-            IO\Out::std(PHP_EOL . $style->get());
+            Output\StreamOutput::std(PHP_EOL . $style->get());
 
-            if ($this->argument->has('debug')) {
+            if ($this->arguments->has('debug')) {
                 // @codeCoverageIgnoreStart
                 echo $exception->getFile() . PHP_EOL;
                 echo $exception->getLine() . PHP_EOL;
@@ -228,7 +310,7 @@ class Console
      */
     private function handleHelp(string $scriptName, ScriptInterface $script): void
     {
-        if (!$this->argument->has('help')) {
+        if (!$this->arguments->has('help')) {
             return;
         }
 
@@ -236,7 +318,7 @@ class Console
         $style->setText(' *** RUN - ' . $scriptName . ' - HELP - ' . date('Y-m-d H:i:s') . ' ***');
         $style->color('fg', Style\Color::GREEN);
 
-        IO\Out::std($style->get());
+        Output\StreamOutput::std($style->get());
         $script->help();
 
         throw new StopAfterHelpException('help, stop!', 2001);
@@ -253,11 +335,11 @@ class Console
         $script->before();
 
         // ~ Display header script only after execution of before method (prevent error with start_session() for example).
-        if (!$this->argument->has('script-no-header')) {
+        if (!$this->arguments->has('script-no-header')) {
             $style = new Style\Style();
             $style->setText(' *** RUN - ' . $scriptName . ' - ' . date('Y-m-d H:i:s') . ' ***');
             $style->color('fg', Style\Color::GREEN);
-            IO\Out::std($style->get());
+            Output\StreamOutput::std($style->get());
         }
 
         // ~ Execute main script method.
@@ -271,11 +353,11 @@ class Console
      */
     private function getScriptName(): string
     {
-        $name = $this->argument->get('name', null, '');
+        $name = $this->arguments->get('name', null, '');
 
         //~ Try to get default argument value if exists, to use it as a name.
         if (empty($name)) {
-            $name = $this->argument->get('__default__', null, '');
+            $name = $this->arguments->get('__default__', null, '');
         }
 
         $scriptName = str_replace('/', '\\', ucwords((string) $name, '/\\'));
@@ -285,7 +367,7 @@ class Console
             $this->help();
 
             // ~ If no help asked, throw exception !
-            if (!$this->argument->has('help')) {
+            if (!$this->arguments->has('help')) {
                 throw new \RuntimeException('Console Error: A script name must be provided!', 2000);
             }
 

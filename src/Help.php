@@ -11,52 +11,43 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console;
 
-use Eureka\Component\Console\Style\Style;
+use Eureka\Component\Console\Option\Options;
+use Eureka\Component\Console\Output\OutputInterface;
 use Eureka\Component\Console\Style\Color;
+use Eureka\Component\Console\Style\Style;
 
 /**
- * Class to display console help message.
+ * Help rendered for CLI
  *
  * @author Romain Cottard
  */
 class Help
 {
-    /** @var array<\stdClass> $arguments List of arguments for script */
-    protected array $arguments = [];
-
-    /** @var string $script_name Script name */
-    protected string $scriptName = '';
-
-    /**
-     * Class constructor.
-     *
-     * @param  string $scriptName Script name
-     */
-    public function __construct(string $scriptName)
-    {
-        $this->scriptName = $scriptName;
-
-        $this->addArgument('h', 'help', 'Reserved - Display Help', false, false);
+    public function __construct(
+        private readonly string $scriptName,
+        private readonly Options $options,
+        private readonly OutputInterface $output,
+    ) {
     }
 
     /**
      * Display help
      * Result example:
      *
-     * -h, --help Reserved - Display Help', PHP_EOL;
-     *     --color Reserved - Use color system for cli display
-     *     --debug Reserved - Use this argument to display trace for exceptions
+     * -h, --help  Display Help
+     *     --color Use color system for cli display
+     *     --debug Use this argument to display trace for exceptions
      *
      * @return void
      */
     public function display(): void
     {
         $style = new Style();
-        IO\Out::std('');
+        Output\StreamOutput::std('');
 
-        IO\Out::std($style->setText('Use    : ')->colorForeground(Color::GREEN)->highlightForeground()->bold()->get(), '');
+        Output\StreamOutput::std($style->setText('Use    : ')->colorForeground(Color::GREEN)->highlightForeground()->bold()->get(), '');
 
-        IO\Out::std(
+        Output\StreamOutput::std(
             $style->reset()
             ->setText('bin/console ' . $this->scriptName . ' [OPTION]...')
             ->highlight('fg')
@@ -64,7 +55,7 @@ class Help
             ->get()
         );
 
-        IO\Out::std($style->reset()->setText('OPTIONS:')->color('fg', Color::GREEN)->bold()->get());
+        Output\StreamOutput::std($style->reset()->setText('OPTIONS:')->color('fg', Color::GREEN)->bold()->get());
 
         foreach ($this->arguments as $argument) {
             $line = '  ';
@@ -95,10 +86,10 @@ class Help
                 $line .= $style->reset()->setText(' - MANDATORY')->colorForeground(Color::RED)->get();
             }
 
-            IO\Out::std($line);
+            Output\StreamOutput::std($line);
         }
 
-        IO\Out::std('');
+        Output\StreamOutput::std('');
     }
 
     /**
