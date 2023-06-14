@@ -1,4 +1,4 @@
-.PHONY: validate install update phpcs phpcbf php74compatibility php82compatibility phpstan analyze tests testdox ci clean
+.PHONY: validate install update phpcs phpcbf php74compatibility php81compatibility php82compatibility phpstan analyze tests testdox ci clean
 
 PHP_FILES := $(shell find src tests -type f -name '*.php')
 define header =
@@ -21,10 +21,10 @@ update:
 composer.lock: install
 
 #~ Vendor binaries dependencies
-vendor/bin/phpcbf: composer.lock
-vendor/bin/phpcs: composer.lock
-vendor/bin/phpstan: composer.lock
-vendor/bin/phpunit: composer.lock
+vendor/bin/phpcbf:
+vendor/bin/phpcs:
+vendor/bin/phpstan:
+vendor/bin/phpunit:
 
 #~ Report directories dependencies
 build/reports/phpunit:
@@ -39,7 +39,7 @@ build/reports/phpstan:
 #~ main commands
 phpcs: vendor/bin/phpcs build/reports/phpcs
 	$(call header,Checking Code Style)
-	@./vendor/bin/phpcs --standard=./ci/phpcs/eureka.xml --cache=./build/cs_deezer.cache -p --report-full --report-checkstyle=./build/reports/cs/eureka.xml src/ tests/
+	@./vendor/bin/phpcs --standard=./ci/phpcs/eureka.xml --cache=./build/cs_eureka.cache -p --report-full --report-checkstyle=./build/reports/cs/eureka.xml src/ tests/
 
 phpcbf: vendor/bin/phpcbf
 	$(call header,Fixing Code Style)
@@ -47,7 +47,11 @@ phpcbf: vendor/bin/phpcbf
 
 php74compatibility: vendor/bin/phpstan build/reports/phpstan
 	$(call header,Checking PHP 7.4 compatibility)
-	@XDEBUG_MODE=off  ./vendor/bin/phpstan analyse --configuration=./ci/php74-compatibility.neon --error-format=table
+	@XDEBUG_MODE=off ./vendor/bin/phpstan analyse --configuration=./ci/php74-compatibility.neon --error-format=table
+
+php81compatibility: vendor/bin/phpstan build/reports/phpstan
+	$(call header,Checking PHP 8.1 compatibility)
+	@XDEBUG_MODE=off ./vendor/bin/phpstan analyse --configuration=./ci/php81-compatibility.neon --error-format=table
 
 php82compatibility: vendor/bin/phpstan build/reports/phpstan
 	$(call header,Checking PHP 8.2 compatibility)

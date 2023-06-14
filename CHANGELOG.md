@@ -17,6 +17,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ----
 
+## [5.3.1] - 2023-06-14
+[5.3.1]: https://github.com/eureka-framework/component-console/compare/5.3.0...5.3.1
+### Added
+- Re-add PHP 8.1 config
+### Changed
+- Update GitHub workflow
+- Update Makefile
+- Update composer.json (now allow PSR log from v1 to v3)
+
 ## [5.3.0] - 2023-01-03
 [5.3.0]: https://github.com/eureka-framework/component-console/compare/5.2.0...5.3.0
 ### Added
