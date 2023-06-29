@@ -13,8 +13,8 @@ namespace Eureka\Component\Console;
 
 use Eureka\Component\Console\Option\Options;
 use Eureka\Component\Console\Output\OutputInterface;
-use Eureka\Component\Console\Style\Color;
-use Eureka\Component\Console\Style\Style;
+use Eureka\Component\Console\Style\OldColor;
+use Eureka\Component\Console\Style\OldStyle;
 
 /**
  * Help rendered for CLI
@@ -42,12 +42,19 @@ class Help
      */
     public function display(): void
     {
-        $style = new Style();
-        Output\StreamOutput::std('');
+        $style = new OldStyle();
+        $this->output->writeln('');
 
-        Output\StreamOutput::std($style->setText('Use    : ')->colorForeground(Color::GREEN)->highlightForeground()->bold()->get(), '');
+        $this->output->write(
+            $style
+                ->setText('Use    : ')
+                ->colorForeground(OldColor::GREEN)
+                ->highlightForeground()
+                ->bold()
+                ->get()
+        );
 
-        Output\StreamOutput::std(
+        $this->output->writeln(
             $style->reset()
             ->setText('bin/console ' . $this->scriptName . ' [OPTION]...')
             ->highlight('fg')
@@ -55,15 +62,22 @@ class Help
             ->get()
         );
 
-        Output\StreamOutput::std($style->reset()->setText('OPTIONS:')->color('fg', Color::GREEN)->bold()->get());
+        $this->output->writeln(
+            $style
+                ->reset()
+                ->setText('OPTIONS:')
+                ->color('fg', OldColor::GREEN)
+                ->bold()
+                ->get()
+        );
 
-        foreach ($this->arguments as $argument) {
+        foreach ($this->options as $option) {
             $line = '  ';
 
-            if (!empty($argument->shortName)) {
-                $line .= '-' . $argument->shortName;
+            if (!empty($option->getShortName())) {
+                $line .= '-' . $option->getShortName();
 
-                if ($argument->hasValue) {
+                if ($option->hasArgument()) {
                     $line .= ' ARG';
                 }
 
@@ -72,52 +86,23 @@ class Help
 
             $line = str_pad($line, 10); // add 8 space
 
-            if (!empty($argument->fullName)) {
-                $line .= '--' . $argument->fullName;
-                if ($argument->hasValue) {
+            if (!empty($option->getLongName())) {
+                $line .= '--' . $option->getLongName();
+                if ($option->hasArgument()) {
                     $line .= '=ARG';
                 }
             }
 
             $line = $style->reset()->setText(str_pad($line, 40))->bold()->get();
-            $line .= $argument->description;
+            $line .= $option->getDescription();
 
-            if ($argument->isMandatory) {
-                $line .= $style->reset()->setText(' - MANDATORY')->colorForeground(Color::RED)->get();
+            if ($option->isMandatory()) {
+                $line .= $style->reset()->setText(' - MANDATORY')->colorForeground(OldColor::RED)->get();
             }
 
-            Output\StreamOutput::std($line);
+            $this->output->writeln($line);
         }
 
-        Output\StreamOutput::std('');
-    }
-
-    /**
-     * Add argument in list for script help
-     *
-     * @param  string $shortName Short name for argument
-     * @param  string $fullName Full name for argument
-     * @param  string $description Argument's description
-     * @param  bool $hasValue If argument must have value
-     * @param  bool $isMandatory Set true to force mandatory mention.
-     * @return $this
-     */
-    public function addArgument(
-        string $shortName = '',
-        string $fullName = '',
-        string $description = '',
-        bool $hasValue = false,
-        bool $isMandatory = false
-    ): self {
-        $argument              = new \stdClass();
-        $argument->shortName   = $shortName;
-        $argument->fullName    = $fullName;
-        $argument->description = $description;
-        $argument->hasValue    = $hasValue;
-        $argument->isMandatory = $isMandatory;
-
-        $this->arguments[] = $argument;
-
-        return $this;
+        $this->output->writeln('');
     }
 }

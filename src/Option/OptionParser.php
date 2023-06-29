@@ -31,7 +31,7 @@ class OptionParser
      */
     public function parse(array|null $argv = null): Options
     {
-        $argv ??= $_SERVER['argv'] ?? [];
+        $argv ??= ($_SERVER['argv'] ?? []);
 
         $options  = $this->declaredOptions;
         $iterator = new OptionsIterator($argv);

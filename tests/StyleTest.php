@@ -12,8 +12,8 @@ declare(strict_types=1);
 namespace Eureka\Component\Console\Tests;
 
 use Eureka\Component\Console\Argument\Argument;
-use Eureka\Component\Console\Style\Color;
-use Eureka\Component\Console\Style\Style;
+use Eureka\Component\Console\Style\OldColor;
+use Eureka\Component\Console\Style\OldStyle;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -35,7 +35,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->bold();
+        $style = (new OldStyle())->bold();
 
         $this->assertEquals(
             "\033[1;37mThis is my text\033[0m",
@@ -54,7 +54,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->underline();
+        $style = (new OldStyle())->underline();
 
         $this->assertEquals(
             "\033[4;37mThis is my text\033[0m",
@@ -73,7 +73,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->bold()->underline() ;
+        $style = (new OldStyle())->bold()->underline() ;
 
         $this->assertEquals(
             "\033[1;4;37mThis is my text\033[0m",
@@ -92,7 +92,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->color('bg', Color::GREEN)->color('fg', Color::BLACK);
+        $style = (new OldStyle())->color('bg', OldColor::GREEN)->color('fg', OldColor::BLACK);
 
         $this->assertEquals(
             "\033[0;30m\033[42mThis is my text\033[0m",
@@ -111,7 +111,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->color('fg', Color::RED)->bold()->underline();
+        $style = (new OldStyle())->color('fg', OldColor::RED)->bold()->underline();
 
         $this->assertEquals(
             "\033[1;4;31mThis is my text\033[0m",
@@ -130,7 +130,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->color('fg', Color::RED)->bold(false)->underline();
+        $style = (new OldStyle())->color('fg', OldColor::RED)->bold(false)->underline();
 
         $this->assertEquals(
             "\033[4;31mThis is my text\033[0m",
@@ -149,7 +149,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->color('fg', Color::RED)->bold()->highlight('fg');
+        $style = (new OldStyle())->color('fg', OldColor::RED)->bold()->highlight('fg');
 
         $this->assertEquals(
             "\033[1;91mThis is my text\033[0m",
@@ -168,7 +168,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->color('bg', Color::YELLOW)->highlight('bg');
+        $style = (new OldStyle())->color('bg', OldColor::YELLOW)->highlight('bg');
 
         $this->assertEquals(
             "\033[0;37m\033[103mThis is my text\033[0m",
@@ -187,7 +187,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->color('bg', Color::YELLOW)->highlight('fg');
+        $style = (new OldStyle())->color('bg', OldColor::YELLOW)->highlight('fg');
 
         $this->assertEquals(
             "\033[0;97m\033[43mThis is my text\033[0m",
@@ -205,7 +205,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->bold();
+        $style = (new OldStyle())->bold();
 
         $this->assertEquals('This is my text', (string) $style->setText('This is my text'));
     }
@@ -220,7 +220,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->underline();
+        $style = (new OldStyle())->underline();
 
         $this->assertEquals('This is my text', (string) $style->setText('This is my text'));
     }
@@ -235,7 +235,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->bold()->underline() ;
+        $style = (new OldStyle())->bold()->underline() ;
 
         $this->assertEquals('This is my text', (string) $style->setText('This is my text'));
     }
@@ -250,7 +250,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->color('bg', Color::GREEN)->color('fg', Color::BLACK);
+        $style = (new OldStyle())->color('bg', OldColor::GREEN)->color('fg', OldColor::BLACK);
 
         $this->assertEquals('This is my text', (string) $style->setText('This is my text'));
     }
@@ -265,7 +265,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->color('fg', Color::RED)->bold()->underline();
+        $style = (new OldStyle())->color('fg', OldColor::RED)->bold()->underline();
 
         $this->assertEquals('This is my text', (string) $style->setText('This is my text'));
     }
@@ -280,7 +280,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->color('fg', Color::RED)->bold(false)->underline();
+        $style = (new OldStyle())->color('fg', OldColor::RED)->bold(false)->underline();
 
         $this->assertEquals('This is my text', (string) $style->setText('This is my text'));
     }
@@ -295,7 +295,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->color('fg', Color::RED)->bold()->highlight('fg');
+        $style = (new OldStyle())->color('fg', OldColor::RED)->bold()->highlight('fg');
 
         $this->assertEquals('This is my text', (string) $style->setText('This is my text'));
     }
@@ -310,7 +310,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->color('bg', Color::YELLOW)->highlight('bg');
+        $style = (new OldStyle())->color('bg', OldColor::YELLOW)->highlight('bg');
 
         $this->assertEquals('This is my text', (string) $style->setText('This is my text'));
     }
@@ -325,7 +325,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->color('bg', Color::YELLOW)->highlight('fg');
+        $style = (new OldStyle())->color('bg', OldColor::YELLOW)->highlight('fg');
 
         $this->assertEquals('This is my text', (string) $style->setText('This is my text'));
     }
@@ -340,7 +340,7 @@ class StyleTest extends TestCase
         Argument::getInstance()->parse($mockParameterColor);
 
         //~ Set style
-        $style = (new Style())->pad(8, '@');
+        $style = (new OldStyle())->pad(8, '@');
 
         $this->assertEquals('Hello@@@', (string) $style->setText('Hello'));
     }

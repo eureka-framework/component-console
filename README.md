@@ -151,9 +151,9 @@ Console output support styling and color:
 
 use Eureka\Component\Console\Style;
 
-$whiteBold      = (new Style\Style())->bold();
-$greenHighlight = (new Style\Style())->highlightForeground()->colorForeground(Style\Color::GREEN);
-$bgErrorRed     = (new Style\Style())->colorForeground(Style\Color::RED);
+$whiteBold      = (new Style\OldStyle())->bold();
+$greenHighlight = (new Style\OldStyle())->highlightForeground()->colorForeground(Style\OldColor::GREEN);
+$bgErrorRed     = (new Style\OldStyle())->colorForeground(Style\OldColor::RED);
 
 echo (string) $bgErrorRed->setText('An error as occurred!');
 ```

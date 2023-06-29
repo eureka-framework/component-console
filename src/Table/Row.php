@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Table;
 
-use Eureka\Component\Console\Style\Style;
+use Eureka\Component\Console\Style\OldStyle;
 
 /**
  * Class Row
@@ -24,7 +24,7 @@ class Row
     private array $cells;
     private bool $isBar;
     private int $barType;
-    private ?Style $style;
+    private ?OldStyle $style;
     private BorderStyle $borderStyle;
 
     /**
@@ -33,7 +33,7 @@ class Row
      * @param Cell[] $cells
      * @param bool $isHeader @deprecated
      * @param bool $isBar
-     * @param Style|null $style
+     * @param OldStyle|null $style
      * @param int $barType
      * @param BorderStyle|null $borderStyle
      */
@@ -41,7 +41,7 @@ class Row
         array $cells,
         bool $isHeader = false,
         bool $isBar = false,
-        Style $style = null,
+        OldStyle $style = null,
         int $barType = BorderStyle::SIMPLE_MIDDLE,
         BorderStyle $borderStyle = null
     ) {
@@ -64,7 +64,7 @@ class Row
         [$glue, $left, $right] = $this->borderStyle->getChars($this->barType, $this->isBar);
 
         $line = $left . implode($glue, $cells) . $right;
-        if ($this->style instanceof Style) {
+        if ($this->style instanceof OldStyle) {
             $line = (string) $this->style->setText($line);
         }
 

@@ -23,9 +23,6 @@ use Eureka\Component\Console\Output\StreamOutput;
  */
 class Cursor
 {
-    /** @var string CSI Control Sequence Introducer */
-    private const CSI = "\033[";
-
     public function __construct(private readonly OutputInterface $output)
     {
     }
@@ -143,14 +140,14 @@ class Cursor
         shell_exec("stty $mode");
 
         //~ Parse returned response code
-        sscanf($code, self::CSI . '%d;%dR', $line, $col);
+        sscanf($code, Terminal::CSI . '%d;%dR', $line, $col);
 
         return [(int) $col, (int) $line];
     }
 
     private function execute(string $command): static
     {
-        $this->output->write(self::CSI . $command);
+        $this->output->write(Terminal::CSI . $command);
         return $this;
     }
 }

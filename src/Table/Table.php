@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Eureka\Component\Console\Table;
 
 use Eureka\Component\Console\IO\Out;
-use Eureka\Component\Console\Style\Style;
+use Eureka\Component\Console\Style\OldStyle;
 
 /**
  * Class Table
@@ -95,10 +95,10 @@ class Table
     /**
      * @param array<string> $data
      * @param bool $isHeader
-     * @param Style|null $style
+     * @param OldStyle|null $style
      * @return Table
      */
-    public function addRow(array $data, bool $isHeader = false, Style $style = null): self
+    public function addRow(array $data, bool $isHeader = false, OldStyle $style = null): self
     {
         $cells = [];
 
@@ -132,10 +132,10 @@ class Table
     /**
      * @param array<string> $data
      * @param bool $isHeader
-     * @param Style|null $style
+     * @param OldStyle|null $style
      * @return Table
      */
-    public function addRowSpan(array $data, bool $isHeader = false, Style $style = null): self
+    public function addRowSpan(array $data, bool $isHeader = false, OldStyle $style = null): self
     {
         if ($isHeader) {
             $this->addBar(BorderStyle::DOUBLE_MIDDLE_SPAN_BOTTOM); // @codeCoverageIgnore

@@ -16,7 +16,7 @@ namespace Eureka\Component\Console\Option;
  *
  * @author Romain Cottard
  */
-class Option
+class Option implements \Stringable
 {
     public function __construct(
         private readonly ?string $shortName = null,
@@ -64,5 +64,10 @@ class Option
         $this->argument = $argument;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return (string) ($this->longName ?? $this->shortName);
     }
 }

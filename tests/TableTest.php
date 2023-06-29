@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Tests;
 
-use Eureka\Component\Console\Style\Style;
+use Eureka\Component\Console\Style\OldStyle;
 use Eureka\Component\Console\Table\BorderStyle;
 use Eureka\Component\Console\Table\Column;
 use Eureka\Component\Console\Table\Table;
@@ -34,7 +34,7 @@ class TableTest extends TestCase
         ];
 
         $table = new Table($columns);
-        $table->addRow(['1', '2', '3'], false, (new Style())->bold());
+        $table->addRow(['1', '2', '3'], false, (new OldStyle())->bold());
         $table->addRowSpan(['1', '2', '3']);
 
         $assert = <<<ASSERT
@@ -60,7 +60,7 @@ ASSERT;
         ];
 
         $table = new Table($columns, true, BorderStyle::UNICODE);
-        $table->addRow(['1', '2', '3'], false, (new Style())->bold());
+        $table->addRow(['1', '2', '3'], false, (new OldStyle())->bold());
         $table->addRowSpan(['1', '2', '3']);
 
         $assert = <<<ASSERT

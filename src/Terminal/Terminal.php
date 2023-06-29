@@ -20,6 +20,9 @@ use Eureka\Component\Console\Output\OutputInterface;
  */
 class Terminal
 {
+    /** @var string CSI Control Sequence Introducer */
+    public const CSI = "\033[";
+
     public const IS_WINDOWS = (\DIRECTORY_SEPARATOR === '\\');
 
     public const IS_UNIX = (\DIRECTORY_SEPARATOR === '/');

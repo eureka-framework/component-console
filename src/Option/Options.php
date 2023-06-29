@@ -17,9 +17,15 @@ use Eureka\Component\Console\Exception\InvalidOptionException;
  * Option collection (from parsing or declared in Script / Console)
  *
  * @author Romain Cottard
+ * @implements \Iterator<string, Option>
  */
-class Options
+class Options implements \Iterator, \Countable
 {
+    private int $index = 0;
+
+    /** @var array<int, string> $keys*/
+    private array $keys = [];
+
     /** @var array<string, Option> $options List of options */
     protected array $options = [];
 
@@ -40,6 +46,11 @@ class Options
         if ($option->getShortName() !== null) {
             $this->options[$option->getShortName()] = $option;
         }
+
+        //~ Get index key & add to keys for iteration
+        $key = (string) ($option->getLongName() !== null ? $option->getLongName() : $option->getShortName());
+
+        $this->keys[] = $key;
 
         return $this;
     }
@@ -69,6 +80,36 @@ class Options
      */
     public function has(string $name, string $alias = null): bool
     {
-        return (isset($this->options[$name]) || (!empty($alias) && isset($this->options[$alias])));
+        return isset($this->options[$name]) || (!empty($alias) && isset($this->options[$alias]));
+    }
+
+    public function current(): Option
+    {
+        return $this->options[$this->key()];
+    }
+
+    public function next(): void
+    {
+        next($this->keys);
+    }
+
+    public function key(): string
+    {
+        return $this->keys[$this->index];
+    }
+
+    public function valid(): bool
+    {
+        return isset($this->keys[$this->index]);
+    }
+
+    public function rewind(): void
+    {
+        $this->index = 0;
+    }
+
+    public function count(): int
+    {
+        return count($this->options);
     }
 }

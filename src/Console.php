@@ -88,6 +88,11 @@ class Console implements LoggerAwareInterface
         return $this->container;
     }
 
+    public function getTerminal(): Terminal
+    {
+        return $this->terminal;
+    }
+
     /**
      * Set base namespaces.
      * Those namespaces will be added as prefix to script name to autoload it.
@@ -227,11 +232,13 @@ class Console implements LoggerAwareInterface
     {
         // ~ Display footer script timer
         $this->time += microtime(true);
-        $style = new Style\Style(' *** END SCRIPT - Time taken: ' . round($this->time, 2) . 's - ' . date('Y-m-d H:i:s') . ' ***');
-        $style->color('fg', Style\Color::GREEN);
+        $style = new Style\OldStyle(
+            ' *** END SCRIPT - Time taken: ' . round($this->time, 2) . 's - ' . date('Y-m-d H:i:s') . ' ***'
+        );
+        $style->color('fg', Style\OldColor::GREEN);
 
-        if (!$this->arguments->has('script-no-header')) {
-            Output\StreamOutput::std($style->get());
+        if (!$this->options->has('script-no-header')) {
+            $this->output->writeln($style->get());
         }
     }
 
@@ -253,7 +260,6 @@ class Console implements LoggerAwareInterface
      * - OR display script help (if script name is defined)
      * - OR execute script
      *
-     * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws \Exception
@@ -270,8 +276,8 @@ class Console implements LoggerAwareInterface
 
             $this->handleHelp($scriptName, $script);
 
-            $beforeHasBeenRun = $this->handleRun($scriptName, $script);
-        } catch (StopAfterHelpException $exception) {
+            $this->handleRun($scriptName, $script, $beforeHasBeenRun);
+        } catch (StopAfterHelpException) {
             //~ Hard break, but continue to finally
         } catch (\Exception $exception) {
             $this->exitCode = 1;
@@ -281,18 +287,21 @@ class Console implements LoggerAwareInterface
             }
 
             if ($this->logger instanceof LoggerInterface && !$exception instanceof Exception\AlreadyLoggedException) {
-                $this->logger->error($exception->getMessage(), ['exception' => $exception, 'type' => 'console.log']); // @codeCoverageIgnore
+                $this->logger->error(
+                    $exception->getMessage(),
+                    ['exception' => $exception, 'type' => 'console.log']
+                ); // @codeCoverageIgnore
             }
 
-            $style = new Style\Style(' ~~ EXCEPTION[' . $exception->getCode() . ']: ' . $exception->getMessage());
-            $style->color('bg', Style\Color::RED);
-            Output\StreamOutput::std(PHP_EOL . $style->get());
+            $style = new Style\OldStyle(' ~~ EXCEPTION[' . $exception->getCode() . ']: ' . $exception->getMessage());
+            $style->color('bg', Style\OldColor::RED);
+            $this->output->writeln(PHP_EOL . $style->get());
 
-            if ($this->arguments->has('debug')) {
+            if ($this->options->has('debug')) {
                 // @codeCoverageIgnoreStart
-                echo $exception->getFile() . PHP_EOL;
-                echo $exception->getLine() . PHP_EOL;
-                echo $exception->getTraceAsString() . PHP_EOL;
+                $this->outputErr->writeln($exception->getFile());
+                $this->outputErr->writeln((string) $exception->getLine());
+                $this->outputErr->writeln($exception->getTraceAsString());
                 // @codeCoverageIgnoreEnd
             }
         } finally {
@@ -303,62 +312,47 @@ class Console implements LoggerAwareInterface
         }
     }
 
-    /**
-     * @param string $scriptName
-     * @param ScriptInterface $script
-     * @return void
-     */
     private function handleHelp(string $scriptName, ScriptInterface $script): void
     {
-        if (!$this->arguments->has('help')) {
+        if (!$this->options->has('help')) {
             return;
         }
 
-        $style = new Style\Style();
+        $style = new Style\OldStyle();
         $style->setText(' *** RUN - ' . $scriptName . ' - HELP - ' . date('Y-m-d H:i:s') . ' ***');
-        $style->color('fg', Style\Color::GREEN);
+        $style->color('fg', Style\OldColor::GREEN);
 
-        Output\StreamOutput::std($style->get());
+        $this->output->writeln($style->get());
         $script->help();
 
         throw new StopAfterHelpException('help, stop!', 2001);
     }
 
-    /**
-     * @param string $scriptName
-     * @param ScriptInterface $script
-     * @return bool
-     */
-    private function handleRun(string $scriptName, ScriptInterface $script): bool
-    {
+    private function handleRun(
+        string $scriptName,
+        ScriptInterface $script,
+        bool &$beforeHasBeenRun
+    ): void {
         // ~ Execute this method before starting main script method
         $script->before();
 
-        // ~ Display header script only after execution of before method (prevent error with start_session() for example).
-        if (!$this->arguments->has('script-no-header')) {
-            $style = new Style\Style();
+        $beforeHasBeenRun = true;
+
+        // ~ Display header script only after execution of before method
+        if (!$this->options->has('script-no-header')) {
+            $style = new Style\OldStyle();
             $style->setText(' *** RUN - ' . $scriptName . ' - ' . date('Y-m-d H:i:s') . ' ***');
-            $style->color('fg', Style\Color::GREEN);
-            Output\StreamOutput::std($style->get());
+            $style->color('fg', Style\OldColor::GREEN);
+            $this->output->writeln($style->get());
         }
 
         // ~ Execute main script method.
         $script->run();
-
-        return true;
     }
 
-    /**
-     * @return string
-     */
     private function getScriptName(): string
     {
-        $name = $this->arguments->get('name', null, '');
-
-        //~ Try to get default argument value if exists, to use it as a name.
-        if (empty($name)) {
-            $name = $this->arguments->get('__default__', null, '');
-        }
+        $name = $this->options->get('name');
 
         $scriptName = str_replace('/', '\\', ucwords((string) $name, '/\\'));
 
@@ -367,7 +361,7 @@ class Console implements LoggerAwareInterface
             $this->help();
 
             // ~ If no help asked, throw exception !
-            if (!$this->arguments->has('help')) {
+            if (!$this->options->has('help')) {
                 throw new \RuntimeException('Console Error: A script name must be provided!', 2000);
             }
 
@@ -377,10 +371,6 @@ class Console implements LoggerAwareInterface
         return $scriptName;
     }
 
-    /**
-     * @param string $scriptName
-     * @return string
-     */
     private function getClassName(string $scriptName): string
     {
         $classFound = false;
@@ -395,17 +385,13 @@ class Console implements LoggerAwareInterface
         }
 
         if (!$classFound) {
-            throw new \RuntimeException('Current script class does not exists (script: "' . $scriptName . '") !', 2003);
+            throw new \UnexpectedValueException("Current script class does not exists (script: '$scriptName') !", 2003);
         }
 
         return $className;
     }
 
     /**
-     * Get a valid script Instance
-     *
-     * @param string $scriptName
-     * @return ScriptInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -419,16 +405,16 @@ class Console implements LoggerAwareInterface
             }
 
             $script = $this->getContainer()->get(ltrim(strtr($className, '/', '\\'), '\\')); // @codeCoverageIgnore
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             $script = new $className();
         }
 
         if (!($script instanceof ScriptInterface)) {
-            throw new \LogicException('Current script must implement ScriptInterface interface !', 2004);
+            throw new \LogicException("Current script must implement ScriptInterface interface !", 2004);
         }
 
         if (!$script->executable()) {
-            throw new \LogicException('Console Error: Script is not executable !', 2005); // @codeCoverageIgnore
+            throw new \LogicException("Console Error: Script is not executable !", 2005); // @codeCoverageIgnore
         }
 
         return $script;
