@@ -11,18 +11,18 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console;
 
+use Eureka\Component\Console\Color\Bit4StandardColor;
 use Eureka\Component\Console\Exception\StopAfterHelpException;
-use Eureka\Component\Console\Input\InputInterface;
+use Eureka\Component\Console\Input\Input;
 use Eureka\Component\Console\Input\StreamInput;
 use Eureka\Component\Console\Option\Option;
 use Eureka\Component\Console\Option\OptionParser;
 use Eureka\Component\Console\Option\Options;
-use Eureka\Component\Console\Output\OutputInterface;
+use Eureka\Component\Console\Output\Output;
 use Eureka\Component\Console\Output\StreamOutput;
 use Eureka\Component\Console\Terminal\Terminal;
-use Psr\Container\ContainerExceptionInterface;
+use Psr\Clock\ClockInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
@@ -48,21 +48,23 @@ class Console implements LoggerAwareInterface
     protected int $exitCode = 0;
 
     private Terminal $terminal;
-    private InputInterface $input;
+    private Input $input;
 
-    private OutputInterface $output;
-    private OutputInterface $outputErr;
+    private Output $output;
+    private Output $outputErr;
 
     /** @var array<string> $baseNamespaces Base namespaces for scripts class to execute. */
     protected array $baseNamespaces = ['Eureka\Component'];
 
     /**
-     * @param array<string, string> $args List of arguments for current script to execute.
+     * @param ClockInterface $clock
+     * @param array<int, string> $args List of arguments for current script to execute.
      * @param StreamInput|null $input
      * @param StreamOutput|null $output
      * @param StreamOutput|null $outputErr
      */
     public function __construct(
+        private readonly ClockInterface $clock,
         array $args,
         ?StreamInput $input = null,
         ?StreamOutput $output = null,
@@ -232,13 +234,17 @@ class Console implements LoggerAwareInterface
     {
         // ~ Display footer script timer
         $this->time += microtime(true);
-        $style = new Style\OldStyle(
-            ' *** END SCRIPT - Time taken: ' . round($this->time, 2) . 's - ' . date('Y-m-d H:i:s') . ' ***'
-        );
-        $style->color('fg', Style\OldColor::GREEN);
+
+        $time  = round($this->time, 2);
+        $date  = $this->clock->now()->format('Y-m-d H:i:s');
+
+        $text = (new Style\Style())
+            ->color(Bit4StandardColor::Green)
+            ->apply(" *** END SCRIPT - Time taken: {$time}s - $date ***")
+        ;
 
         if (!$this->options->has('script-no-header')) {
-            $this->output->writeln($style->get());
+            $this->output->writeln($text);
         }
     }
 
@@ -249,7 +255,6 @@ class Console implements LoggerAwareInterface
      * @codeCoverageIgnore
      */
     public function terminate(): never
-
     {
         exit($this->exitCode);
     }
@@ -260,8 +265,6 @@ class Console implements LoggerAwareInterface
      * - OR display script help (if script name is defined)
      * - OR execute script
      *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      * @throws \Exception
      */
     public function run(): void
@@ -272,7 +275,7 @@ class Console implements LoggerAwareInterface
         try {
             $scriptName = $this->getScriptName();
             $script     = $this->getScriptInstance($scriptName);
-            $script->setContainer($this->getContainer());
+            $script->setStreams($this->input, $this->output, $this->outputErr);
 
             $this->handleHelp($scriptName, $script);
 
@@ -293,9 +296,11 @@ class Console implements LoggerAwareInterface
                 ); // @codeCoverageIgnore
             }
 
-            $style = new Style\OldStyle(' ~~ EXCEPTION[' . $exception->getCode() . ']: ' . $exception->getMessage());
-            $style->color('bg', Style\OldColor::RED);
-            $this->output->writeln(PHP_EOL . $style->get());
+            $text = (new Style\Style())
+                ->color(Bit4StandardColor::Red)
+                ->apply(" ~~ EXCEPTION[{$exception->getCode()}]: {$exception->getMessage()}")
+            ;
+            $this->output->writeln(PHP_EOL . $text);
 
             if ($this->options->has('debug')) {
                 // @codeCoverageIgnoreStart
@@ -318,11 +323,13 @@ class Console implements LoggerAwareInterface
             return;
         }
 
-        $style = new Style\OldStyle();
-        $style->setText(' *** RUN - ' . $scriptName . ' - HELP - ' . date('Y-m-d H:i:s') . ' ***');
-        $style->color('fg', Style\OldColor::GREEN);
+        $date = $this->clock->now()->format('Y-m-d H:i:s');
+        $text = (new Style\Style())
+            ->color(Bit4StandardColor::Green)
+            ->apply(" *** RUN - $scriptName - HELP - $date ***")
+        ;
 
-        $this->output->writeln($style->get());
+        $this->output->writeln($text);
         $script->help();
 
         throw new StopAfterHelpException('help, stop!', 2001);
@@ -340,10 +347,12 @@ class Console implements LoggerAwareInterface
 
         // ~ Display header script only after execution of before method
         if (!$this->options->has('script-no-header')) {
-            $style = new Style\OldStyle();
-            $style->setText(' *** RUN - ' . $scriptName . ' - ' . date('Y-m-d H:i:s') . ' ***');
-            $style->color('fg', Style\OldColor::GREEN);
-            $this->output->writeln($style->get());
+            $date = $this->clock->now()->format('Y-m-d H:i:s');
+            $text = (new Style\Style())
+                ->color(Bit4StandardColor::Green)
+                ->apply(" *** RUN - $scriptName - $date ***")
+            ;
+            $this->output->writeln($text);
         }
 
         // ~ Execute main script method.
@@ -362,7 +371,7 @@ class Console implements LoggerAwareInterface
 
             // ~ If no help asked, throw exception !
             if (!$this->options->has('help')) {
-                throw new \RuntimeException('Console Error: A script name must be provided!', 2000);
+                throw new \UnexpectedValueException('Console Error: A script name must be provided!', 2000);
             }
 
             throw new StopAfterHelpException('help, stop!', 2001);
@@ -391,10 +400,6 @@ class Console implements LoggerAwareInterface
         return $className;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     private function getScriptInstance(string $scriptName): ScriptInterface
     {
         $className = $this->getClassName($scriptName);
@@ -405,7 +410,7 @@ class Console implements LoggerAwareInterface
             }
 
             $script = $this->getContainer()->get(ltrim(strtr($className, '/', '\\'), '\\')); // @codeCoverageIgnore
-        } catch (\Exception) {
+        } catch (\Throwable) {
             $script = new $className();
         }
 

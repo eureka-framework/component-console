@@ -19,7 +19,7 @@ use Eureka\Component\Console\Exception\InvalidInputException;
  *
  * @author Romain Cottard
  */
-class StreamInput implements InputInterface
+class StreamInput implements Input
 {
     /** @var resource $stream */
     private $stream;

@@ -9,6 +9,8 @@ composer.lock
 
 #~ Misc
 .idea
+oldtests/
+oldtable/
 
 #~ Overridden condigs
 phpstan.neon

@@ -17,7 +17,7 @@ namespace Eureka\Component\Console\Input;
  *
  * @author Romain Cottard
  */
-class NullInput implements InputInterface
+class NullInput implements Input
 {
     /**
      * Read content from input.

@@ -14,7 +14,7 @@ namespace Eureka\Component\Console\Input;
  *
  * @author Romain Cottard
  */
-interface InputInterface
+interface Input
 {
     /**
      * Read content from input.

@@ -90,7 +90,7 @@ class Options implements \Iterator, \Countable
 
     public function next(): void
     {
-        next($this->keys);
+        $this->index++;
     }
 
     public function key(): string

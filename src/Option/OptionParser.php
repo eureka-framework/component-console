@@ -11,12 +11,6 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Option;
 
-
-/**
- * Parser Arguments for CLI scripts
- *
- * @author Romain Cottard
- */
 class OptionParser
 {
     public function __construct(private readonly Options $declaredOptions)
@@ -43,9 +37,13 @@ class OptionParser
 
             $iterator->next();
             $value = ($iterator->valid() ? $iterator->current() : '');
-            $iterator->prev();
             if (empty($value) || str_starts_with($value, '-')) {
                 $value = true;
+            }
+
+            //~ Return to current position if not with case "-o ARG"
+            if (!$isShort || $value === true) {
+                $iterator->prev();
             }
 
             if ($isFull) {
@@ -54,9 +52,9 @@ class OptionParser
             } elseif ($isShort) {
                 //~ Case -o [ARG] or -opt (ie: -o -p -t)
                 $this->parseShort($options, $name, $value);
-            } elseif ($iterator->key() !== 0) {
-                //~ Case of argument without option name, it is a shortcut for --name=ARG
-                $options->get('name')->setArgument($name);
+            } elseif ($iterator->key() !== 0 && $options->has('script')) {
+                //~ Case of argument without option name, it is a shortcut for --script=ARG (for ScriptInterface)
+                $options->get('script')->setArgument($name);
             }
         }
 

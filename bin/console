@@ -10,7 +10,10 @@
 
 declare(strict_types=1);
 
+namespace Eureka\Console;
+
 use Eureka\Component\Console\Console;
+use Lcobucci\Clock\SystemClock;
 
 //~ Define Loader & add main classes for config
 $autoload = getcwd() . '/vendor/autoload.php';
@@ -18,7 +21,7 @@ if (is_file($autoload)) {
     require $autoload;
 }
 
-if (!class_exists('Eureka\Component\Console\Console', true)) {
+if (!class_exists('Eureka\Component\Console\Console')) {
     if (is_file($autoload = __DIR__ . '/../vendor/autoload.php')) {
         require($autoload);
     } elseif (is_file($autoload = __DIR__ . '/../../../autoload.php')) {
@@ -36,7 +39,7 @@ if (!class_exists('Eureka\Component\Console\Console', true)) {
 
 try {
 
-    $console = (new Console($argv))
+    $console = (new Console(SystemClock::fromSystemTimezone(), $argv))
         ->setBaseNamespaces([
             'Application\Script',
             'Eureka\Component\Deployer\Script',

@@ -18,7 +18,7 @@ use Eureka\Component\Console\Exception\InvalidOutputException;
  *
  * @author Romain Cottard
  */
-class StreamOutput implements OutputInterface
+class StreamOutput implements Output
 {
     /** @var resource $stream */
     private $stream;

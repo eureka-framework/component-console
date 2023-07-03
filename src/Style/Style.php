@@ -16,6 +16,7 @@ use Eureka\Component\Console\Color\Bit4Color;
 use Eureka\Component\Console\Color\Bit4StandardColor;
 use Eureka\Component\Console\Color\Bit8Color;
 use Eureka\Component\Console\Color\Color;
+use Eureka\Component\Console\Option\Options;
 use Eureka\Component\Console\Terminal\Terminal;
 
 /**
@@ -25,60 +26,60 @@ use Eureka\Component\Console\Terminal\Terminal;
  */
 class Style
 {
-    private Color|null $fgColor = null;
-    private Color|null $bgColor = null;
-    private bool $bold = false;
-    private bool $faint = false;
-    private bool $italic = false;
-    private bool $underline = false;
-    private bool $blink = false;
-    private bool $fastBlink = false;
-    private bool $invert = false;
-    private bool $strike = false;
+    protected Color|null $fgColor = null;
+    protected Color|null $bgColor = null;
+    protected bool $bold = false;
+    protected bool $faint = false;
+    protected bool $italic = false;
+    protected bool $underline = false;
+    protected bool $blink = false;
+    protected bool $fastBlink = false;
+    protected bool $invert = false;
+    protected bool $strike = false;
 
-    public function color(Color $color): self
+    public function color(Color $color): static
     {
         $this->fgColor = $color;
 
         return $this;
     }
 
-    public function background(Color $color): self
+    public function background(Color $color): static
     {
         $this->bgColor = $color;
 
         return $this;
     }
 
-    public function bold(bool $bold = true): self
+    public function bold(bool $bold = true): static
     {
         $this->bold = $bold;
 
         return $this;
     }
 
-    public function faint(bool $faint = true): self
+    public function faint(bool $faint = true): static
     {
         $this->faint = $faint;
 
         return $this;
     }
 
-    public function italic(bool $italic = true): self
+    public function italic(bool $italic = true): static
     {
         $this->italic = $italic;
 
         return $this;
     }
 
-    public function underline(bool $underline = true): self
+    public function underline(bool $underline = true): static
     {
         $this->underline = $underline;
 
         return $this;
     }
 
-    public function blink(bool $blink = true, bool $fast = false): self
+    public function blink(bool $blink = true, bool $fast = false): static
     {
         $this->blink     = $blink;
         $this->fastBlink = $fast;
@@ -86,25 +87,25 @@ class Style
         return $this;
     }
 
-    public function invert(bool $invert = true): self
+    public function invert(bool $invert = true): static
     {
         $this->invert = $invert;
 
         return $this;
     }
 
-    public function strike(bool $strike = true): self
+    public function strike(bool $strike = true): static
     {
         $this->strike = $strike;
 
         return $this;
     }
 
-    public function apply(string|\Stringable|int|float|null $text): string
+    public function apply(string|\Stringable|int|float|null $text, Options|null $options = null): string
     {
         $csi = Terminal::CSI;
 
-        $styledText = $text;
+        $styledText = (string) $text;
 
         if ($this->bold) {
             $styledText = "{$csi}1m{$styledText}";
@@ -136,6 +137,22 @@ class Style
             $styledText = "{$csi}9m{$styledText}";
         }
 
+        if ($options === null || !$options->has('no-color')) {
+            $styledText = $this->applyColor($styledText);
+            $styledText = $this->applyBackground($styledText);
+        }
+
+        if ($styledText !== $text) {
+            $styledText = "{$styledText}{$csi}0m";
+        }
+
+        return $styledText;
+    }
+
+    private function applyColor(string $styledText): string
+    {
+        $csi = Terminal::CSI;
+
         if ($this->fgColor instanceof Bit4Color) {
             $prefix = $this->fgColor instanceof Bit4StandardColor ? 3 : 9;
             $styledText = "{$csi}{$prefix}{$this->fgColor->getIndex()}m{$styledText}";
@@ -145,6 +162,13 @@ class Style
             [$r, $g, $b] = $this->fgColor->rgb();
             $styledText = "{$csi}38;2;{$r};{$g};{$b}m{$styledText}";
         }
+
+        return $styledText;
+    }
+
+    private function applyBackground(string $styledText): string
+    {
+        $csi = Terminal::CSI;
 
         if ($this->bgColor instanceof Bit4Color) {
             $prefix = $this->bgColor instanceof Bit4StandardColor ? 4 : 10;
@@ -156,6 +180,6 @@ class Style
             $styledText = "{$csi}48;2;{$r};{$g};{$b}m{$styledText}";
         }
 
-        return "{$styledText}{$csi}0m";
+        return $styledText;
     }
 }

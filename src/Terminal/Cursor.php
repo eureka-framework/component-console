@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Eureka\Component\Console\Terminal;
 
 use Eureka\Component\Console\Input\StreamInput;
-use Eureka\Component\Console\Output\OutputInterface;
+use Eureka\Component\Console\Output\Output;
 use Eureka\Component\Console\Output\StreamOutput;
 
 /**
@@ -23,7 +23,7 @@ use Eureka\Component\Console\Output\StreamOutput;
  */
 class Cursor
 {
-    public function __construct(private readonly OutputInterface $output)
+    public function __construct(private readonly Output $output)
     {
     }
 
@@ -131,7 +131,7 @@ class Cursor
         shell_exec('stty -icanon -echo');
 
         //~ Write on input the following command will return the cursor position in this format "\033[{LINE};{COL}R"
-        (new StreamOutput(\STDIN, false))->write(self::CSI . '6n');
+        (new StreamOutput(\STDIN, false))->write(Terminal::CSI . '6n');
 
         //~ Read returned code from previous command on input stream
         $code = (new StreamInput(\STDIN))->readString();

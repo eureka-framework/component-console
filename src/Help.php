@@ -11,10 +11,11 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console;
 
+use Eureka\Component\Console\Color\Bit4HighColor;
+use Eureka\Component\Console\Color\Bit4StandardColor;
 use Eureka\Component\Console\Option\Options;
-use Eureka\Component\Console\Output\OutputInterface;
-use Eureka\Component\Console\Style\OldColor;
-use Eureka\Component\Console\Style\OldStyle;
+use Eureka\Component\Console\Output\Output;
+use Eureka\Component\Console\Style\Style;
 
 /**
  * Help rendered for CLI
@@ -26,7 +27,7 @@ class Help
     public function __construct(
         private readonly string $scriptName,
         private readonly Options $options,
-        private readonly OutputInterface $output,
+        private readonly Output $output,
     ) {
     }
 
@@ -42,33 +43,27 @@ class Help
      */
     public function display(): void
     {
-        $style = new OldStyle();
         $this->output->writeln('');
 
         $this->output->write(
-            $style
-                ->setText('Use    : ')
-                ->colorForeground(OldColor::GREEN)
-                ->highlightForeground()
+            (new Style())
+                ->color(Bit4HighColor::Green)
                 ->bold()
-                ->get()
+                ->apply('Use    : ')
         );
 
         $this->output->writeln(
-            $style->reset()
-            ->setText('bin/console ' . $this->scriptName . ' [OPTION]...')
-            ->highlight('fg')
-            ->bold()
-            ->get()
+            (new Style())
+                ->color(Bit4HighColor::White)
+                ->bold()
+                ->apply("bin/console $this->scriptName [OPTION]...")
         );
 
         $this->output->writeln(
-            $style
-                ->reset()
-                ->setText('OPTIONS:')
-                ->color('fg', OldColor::GREEN)
+            (new Style())
+                ->color(Bit4StandardColor::Green)
                 ->bold()
-                ->get()
+                ->apply('OPTIONS:')
         );
 
         foreach ($this->options as $option) {
@@ -93,11 +88,11 @@ class Help
                 }
             }
 
-            $line = $style->reset()->setText(str_pad($line, 40))->bold()->get();
+            $line = (new Style())->bold()->apply(str_pad($line, 40));
             $line .= $option->getDescription();
 
             if ($option->isMandatory()) {
-                $line .= $style->reset()->setText(' - MANDATORY')->colorForeground(OldColor::RED)->get();
+                $line .= (new Style())->color(Bit4StandardColor::Red)->apply(' - MANDATORY');
             }
 
             $this->output->writeln($line);

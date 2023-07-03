@@ -11,68 +11,64 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Table;
 
-use Eureka\Component\Console\Style\OldStyle;
+use Eureka\Component\Console\Option\Options;
+use Eureka\Component\Console\Style\CellStyle;
 
-/**
- * Class Row
- *
- * @author Romain Cottard
- */
 class Row
 {
-    /** @var Cell[] $cells */
-    private array $cells;
-    private bool $isBar;
-    private int $barType;
-    private ?OldStyle $style;
-    private BorderStyle $borderStyle;
+    /**
+     * @param Cell[] $cells
+     */
+    public function __construct(
+        private array $cells = [],
+        private readonly bool $isHeader = false,
+        private readonly CellStyle $style = new CellStyle()
+    ) {
+    }
+
+    public function isHeader(): bool
+    {
+        return $this->isHeader;
+    }
+
+    public function isSpan(): bool
+    {
+        return count($this->cells) === 1;
+    }
+
+    public function addCell(Cell $cell): static
+    {
+        $this->cells[] = $cell;
+
+        return $this;
+    }
+
+    public function newCell(string|int|float|bool|null $content): static
+    {
+        $cell = new Cell((string) $content);
+
+        $this->cells[] = $cell;
+
+        return $this;
+    }
 
     /**
-     * Row constructor.
-     *
-     * @param Cell[] $cells
-     * @param bool $isHeader @deprecated
-     * @param bool $isBar
-     * @param OldStyle|null $style
-     * @param int $barType
-     * @param BorderStyle|null $borderStyle
+     * @param Column[] $columns
+     * @param Border $border
+     * @return string
      */
-    public function __construct(  // @-phpstan-ignore-line - Ignore $isHeader unused parameter
-        array $cells,
-        bool $isHeader = false,
-        bool $isBar = false,
-        OldStyle $style = null,
-        int $barType = BorderStyle::SIMPLE_MIDDLE,
-        BorderStyle $borderStyle = null
-    ) {
-        $this->cells   = $cells;
-        $this->isBar   = $isBar;
-        $this->style   = $style;
-        $this->barType = $barType;
-
-        $this->borderStyle = $borderStyle ?? new BorderStyle(BorderStyle::ASCII);
-    }
-
-    public function render(): string
+    public function render(array $columns, Border $border, Options $options): string
     {
         $cells = [];
+        foreach ($this->cells as $index => $cell) {
+            $column = $columns[$index];
+            $style = $this->style->inheritFrom($column->getStyle());
 
-        foreach ($this->cells as $cell) {
-            $cells[] = (string) $cell;
+            $cells[] = $cell->render($style, $options);
         }
 
-        [$glue, $left, $right] = $this->borderStyle->getChars($this->barType, $this->isBar);
+        [$glue, $left, $right] = $border->getChars($options);
 
-        $line = $left . implode($glue, $cells) . $right;
-        if ($this->style instanceof OldStyle) {
-            $line = (string) $this->style->setText($line);
-        }
-
-        return $line;
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
+        return $left . implode($glue, $cells) . $right;
     }
 }

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Color;
 
-
 /**
  * 8 Bits high intensity colors
  *

@@ -9,4 +9,6 @@ parameters:
     - ./vendor/autoload.php
 
   ignoreErrors:
-    - '#Constructor of class Eureka\\Component\\Console\\Table\\Row has an unused parameter \$isHeader.#'
+    -
+      path: 'src/Input/StreamInput.php'
+      message: '`Method .*StreamInput::readFormat\(\) should return array\<int, bool\|float\|int\|string\> but returns array\<int, mixed\>\.`'

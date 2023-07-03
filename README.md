@@ -206,11 +206,11 @@ You can easily display a progress bar, percentage or estimated time left:
 ```php
 <?php
 
-use Eureka\Component\Console\Progress\Progress;
+use Eureka\Component\Console\Progress\ProgressOld;
 
 $maxIteration = 10;
-$progress = new Progress('phpunit', $maxIteration);
-$progress->setTypeDisplay(Progress::TYPE_BAR);
+$progress = new ProgressOld('phpunit', $maxIteration);
+$progress->setTypeDisplay(ProgressOld::TYPE_BAR);
 
 for ($i = 0; $i < $maxIteration; $i++) {
     $progress->display('iteration #' . $i);

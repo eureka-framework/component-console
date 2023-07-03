@@ -16,7 +16,7 @@ namespace Eureka\Component\Console\Output;
  *
  * @author Romain Cottard
  */
-class NullOutput implements OutputInterface
+class NullOutput implements Output
 {
     /**
      * Write message in the void.

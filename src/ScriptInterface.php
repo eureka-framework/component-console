@@ -11,7 +11,10 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console;
 
-use Psr\Container\ContainerInterface;
+use Eureka\Component\Console\Input\Input;
+use Eureka\Component\Console\Input\StreamInput;
+use Eureka\Component\Console\Output\Output;
+use Eureka\Component\Console\Output\StreamOutput;
 
 /**
  * Interface for console script launched by component console.
@@ -28,6 +31,12 @@ interface ScriptInterface
     public function executable(): bool;
 
     /**
+     * @param  bool $executable
+     * @return $this
+     */
+    public function setExecutable(bool $executable = true): static;
+
+    /**
      * Get description of the script
      *
      * @return string
@@ -35,17 +44,27 @@ interface ScriptInterface
     public function getDescription(): string;
 
     /**
+     * @param  string $description
+     * @return $this
+     */
+    public function setDescription(string $description): static;
+
+    /**
+     * Set stream input & outputs
+     *
+     * @param Input $input
+     * @param Output $output
+     * @param Output $outputErr
+     * @return void
+     */
+    public function setStreams(Input $input, Output $output, Output $outputErr): void;
+
+    /**
      * Display help
      *
      * @return void
      */
     public function help(): void;
-
-    /**
-     * @param  ContainerInterface|null $container
-     * @return static
-     */
-    public function setContainer(ContainerInterface $container = null): self;
 
     /**
      * Main method for console script.

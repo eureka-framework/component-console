@@ -11,7 +11,8 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console;
 
-use Psr\Container\ContainerInterface;
+use Eureka\Component\Console\Input\Input;
+use Eureka\Component\Console\Output\Output;
 
 /**
  * Console Abstraction class.
@@ -27,8 +28,9 @@ abstract class AbstractScript implements ScriptInterface
     /** @var string $description Console script description. */
     private string $description = 'Script description for Help !';
 
-    /** @var ContainerInterface|null $container Set to true to set class as an executable script */
-    private ?ContainerInterface $container = null;
+    protected Input|null $input = null;
+    protected Output|null $output = null;
+    protected Output|null $outputErr = null;
 
     /**
      * Help method.
@@ -47,21 +49,25 @@ abstract class AbstractScript implements ScriptInterface
     abstract public function run(): void;
 
     /**
-     * @param  ContainerInterface|null $container
-     * @return $this
+     * Set stream input & outputs
+     *
+     * @param Input $input
+     * @param Output $output
+     * @param Output $outputErr
+     * @return void
      */
-    public function setContainer(ContainerInterface $container = null): self
+    public function setStreams(Input $input, Output $output, Output $outputErr): void
     {
-        $this->container = $container;
-
-        return $this;
+        $this->input     = $input;
+        $this->output    = $output;
+        $this->outputErr = $outputErr;
     }
 
     /**
      * @param  string $description
      * @return $this
      */
-    public function setDescription(string $description): self
+    public function setDescription(string $description): static
     {
         $this->description = $description;
 
@@ -72,7 +78,7 @@ abstract class AbstractScript implements ScriptInterface
      * @param  bool $executable
      * @return $this
      */
-    public function setExecutable(bool $executable = true): self
+    public function setExecutable(bool $executable = true): static
     {
         $this->executable = $executable;
 
@@ -87,15 +93,6 @@ abstract class AbstractScript implements ScriptInterface
     public function executable(): bool
     {
         return $this->executable;
-    }
-
-    /**
-     * @return ContainerInterface|null
-     * @codeCoverageIgnore
-     */
-    public function getContainer(): ?ContainerInterface
-    {
-        return $this->container;
     }
 
     /**

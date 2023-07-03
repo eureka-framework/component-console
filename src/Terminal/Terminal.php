@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Terminal;
 
-use Eureka\Component\Console\Output\OutputInterface;
+use Eureka\Component\Console\Output\Output;
 
 /**
  * Terminal class to manage terminal info or clear it.
@@ -32,7 +32,7 @@ class Terminal
     private int $width;
     private int $height;
 
-    public function __construct(private readonly OutputInterface $output)
+    public function __construct(private readonly Output $output)
     {
         $this->cursor = new Cursor($this->output);
 

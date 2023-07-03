@@ -14,7 +14,7 @@ namespace Eureka\Component\Console\Output;
  *
  * @author Romain Cottard
  */
-interface OutputInterface
+interface Output
 {
     /**
      * Write the message on the stream output.

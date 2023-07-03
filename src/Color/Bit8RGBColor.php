@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Color;
 
-
 /**
  * 8 Bits RGB colors
  *
@@ -37,6 +36,6 @@ class Bit8RGBColor implements Bit8Color
 
     public function getIndex(): int
     {
-        return 16 + 36 * $this->r + 6 * $this->g + $this->b;
+        return 16 + (36 * $this->r) + (6 * $this->g) + $this->b;
     }
 }
