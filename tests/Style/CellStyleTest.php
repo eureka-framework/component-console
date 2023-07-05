@@ -47,7 +47,7 @@ class CellStyleTest extends TestCase
     public function testICanInheritFromAnotherEmptyStyle(): void
     {
         $inheritedStyle = new CellStyle();
-        $style = (new CellStyle(11, Align::Center, false))
+        $style = (new CellStyle(width: 11, align: Align::Center, paddingSpace: false))
             ->bold()
             ->faint()
             ->italic()

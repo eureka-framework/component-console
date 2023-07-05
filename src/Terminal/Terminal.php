@@ -32,8 +32,10 @@ class Terminal
     private int $width;
     private int $height;
 
-    public function __construct(private readonly Output $output)
-    {
+    public function __construct(
+        private readonly Output $output,
+        private readonly Shell $shell = new Shell()
+    ) {
         $this->cursor = new Cursor($this->output);
 
         $this->init();
@@ -80,7 +82,7 @@ class Terminal
 
     private function initFromStty(): void
     {
-        $stty = (string) shell_exec('stty -a');
+        $stty = (string) $this->shell->exec('stty -a');
         if (
             \preg_match('`rows.(?<height>\d+);.columns.(?<width>\d+);`is', $stty, $matches) > 0 ||
             \preg_match('`;.(?<height>\d+).rows;.(?<width>\d+).columns`is', $stty, $matches) > 0

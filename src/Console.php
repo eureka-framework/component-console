@@ -16,7 +16,7 @@ use Eureka\Component\Console\Exception\StopAfterHelpException;
 use Eureka\Component\Console\Input\Input;
 use Eureka\Component\Console\Input\StreamInput;
 use Eureka\Component\Console\Option\Option;
-use Eureka\Component\Console\Option\OptionParser;
+use Eureka\Component\Console\Option\OptionsParser;
 use Eureka\Component\Console\Option\Options;
 use Eureka\Component\Console\Output\Output;
 use Eureka\Component\Console\Output\StreamOutput;
@@ -43,8 +43,6 @@ class Console implements LoggerAwareInterface
     /** @var bool $isVerbose Set true to display header/footer script message (name, time...) */
     protected bool $isVerbose = true;
 
-    protected ?ContainerInterface $container = null;
-
     protected int $exitCode = 0;
 
     private Terminal $terminal;
@@ -62,16 +60,18 @@ class Console implements LoggerAwareInterface
      * @param StreamInput|null $input
      * @param StreamOutput|null $output
      * @param StreamOutput|null $outputErr
+     * @param ContainerInterface|null $container
      */
     public function __construct(
         private readonly ClockInterface $clock,
         array $args,
         ?StreamInput $input = null,
         ?StreamOutput $output = null,
-        ?StreamOutput $outputErr = null
+        ?StreamOutput $outputErr = null,
+        private readonly ?ContainerInterface $container = null,
     ) {
         $this->options = $this->initOptions();
-        $this->options = (new OptionParser($this->options))->parse($args);
+        $this->options = (new OptionsParser($this->options))->parse($args);
 
         $isQuiet = (bool) $this->options->get('quiet')->getArgument();
 
@@ -80,14 +80,6 @@ class Console implements LoggerAwareInterface
         $this->outputErr = $outputErr ?? new StreamOutput(\STDERR, $isQuiet);
 
         $this->terminal  = new Terminal($this->output);
-    }
-
-    /**
-     * @return ContainerInterface|null
-     */
-    public function getContainer(): ?ContainerInterface
-    {
-        return $this->container;
     }
 
     public function getTerminal(): Terminal
@@ -169,13 +161,27 @@ class Console implements LoggerAwareInterface
             ->add(
                 new Option(
                     longName:    'quiet',
-                    description: 'Force disabled console lib messages (header, footer, timer...)',
+                    description: 'Force disabled console output (if message are written on stream output)',
                     default:     false,
                 )
             )
             ->add(
                 new Option(
-                    longName:    'name',
+                    longName:    'with-header',
+                    description: 'Enable console lib message header',
+                    default:     false,
+                )
+            )
+            ->add(
+                new Option(
+                    longName:    'with-footer',
+                    description: 'Enable console lib messages footer',
+                    default:     false,
+                )
+            )
+            ->add(
+                new Option(
+                    longName:    'script',
                     description: 'Console class script to run (Example: database/console)',
                     mandatory:   true,
                     hasArgument: true,
@@ -243,7 +249,7 @@ class Console implements LoggerAwareInterface
             ->apply(" *** END SCRIPT - Time taken: {$time}s - $date ***")
         ;
 
-        if (!$this->options->has('script-no-header')) {
+        if ($this->options->get('with-footer')->getArgument()) {
             $this->output->writeln($text);
         }
     }
@@ -296,13 +302,13 @@ class Console implements LoggerAwareInterface
                 ); // @codeCoverageIgnore
             }
 
-            $text = (new Style\Style())
+            $text = (new Style\Style($this->options))
                 ->color(Bit4StandardColor::Red)
                 ->apply(" ~~ EXCEPTION[{$exception->getCode()}]: {$exception->getMessage()}")
             ;
             $this->output->writeln(PHP_EOL . $text);
 
-            if ($this->options->has('debug')) {
+            if ($this->options->get('debug')->getArgument()) {
                 // @codeCoverageIgnoreStart
                 $this->outputErr->writeln($exception->getFile());
                 $this->outputErr->writeln((string) $exception->getLine());
@@ -319,17 +325,21 @@ class Console implements LoggerAwareInterface
 
     private function handleHelp(string $scriptName, ScriptInterface $script): void
     {
-        if (!$this->options->has('help')) {
+        if (!$this->options->get('help')->getArgument()) {
             return;
         }
 
-        $date = $this->clock->now()->format('Y-m-d H:i:s');
-        $text = (new Style\Style())
-            ->color(Bit4StandardColor::Green)
-            ->apply(" *** RUN - $scriptName - HELP - $date ***")
-        ;
+        if ($this->options->get('with-header')->getArgument()) {
+            $date = $this->clock->now()
+                ->format('Y-m-d H:i:s')
+            ;
+            $text = (new Style\Style($this->options))
+                ->color(Bit4StandardColor::Green)
+                ->apply(" *** RUN - $scriptName - HELP - $date ***")
+            ;
 
-        $this->output->writeln($text);
+            $this->output->writeln($text);
+        }
         $script->help();
 
         throw new StopAfterHelpException('help, stop!', 2001);
@@ -346,9 +356,9 @@ class Console implements LoggerAwareInterface
         $beforeHasBeenRun = true;
 
         // ~ Display header script only after execution of before method
-        if (!$this->options->has('script-no-header')) {
+        if ($this->options->get('with-header')->getArgument()) {
             $date = $this->clock->now()->format('Y-m-d H:i:s');
-            $text = (new Style\Style())
+            $text = (new Style\Style($this->options))
                 ->color(Bit4StandardColor::Green)
                 ->apply(" *** RUN - $scriptName - $date ***")
             ;
@@ -361,7 +371,7 @@ class Console implements LoggerAwareInterface
 
     private function getScriptName(): string
     {
-        $name = $this->options->get('name');
+        $name = $this->options->get('script')->getArgument();
 
         $scriptName = str_replace('/', '\\', ucwords((string) $name, '/\\'));
 
@@ -370,7 +380,7 @@ class Console implements LoggerAwareInterface
             $this->help();
 
             // ~ If no help asked, throw exception !
-            if (!$this->options->has('help')) {
+            if (!$this->options->get('help')->getArgument()) {
                 throw new \UnexpectedValueException('Console Error: A script name must be provided!', 2000);
             }
 
@@ -405,11 +415,11 @@ class Console implements LoggerAwareInterface
         $className = $this->getClassName($scriptName);
 
         try {
-            if (empty($this->getContainer())) {
+            if (empty($this->container)) {
                 throw new \RuntimeException();
             }
 
-            $script = $this->getContainer()->get(ltrim(strtr($className, '/', '\\'), '\\')); // @codeCoverageIgnore
+            $script = $this->container->get(ltrim(strtr($className, '/', '\\'), '\\')); // @codeCoverageIgnore
         } catch (\Throwable) {
             $script = new $className();
         }

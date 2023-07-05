@@ -12,7 +12,8 @@ declare(strict_types=1);
 namespace Examples;
 
 use Eureka\Component\Console\Color\Bit8StandardColor;
-use Eureka\Component\Console\Option\OptionParser;
+use Eureka\Component\Console\Option\Option;
+use Eureka\Component\Console\Option\OptionsParser;
 use Eureka\Component\Console\Option\Options;
 use Eureka\Component\Console\Output\StreamOutput;
 use Eureka\Component\Console\Progress\ProgressBar;
@@ -22,7 +23,7 @@ use Eureka\Component\Console\Terminal\Terminal;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 $terminal = new Terminal(new StreamOutput(\STDOUT, false));
-$options  = (new OptionParser(new Options()))->parse($argv);
+$options  = (new OptionsParser(new Options()))->parse($argv);
 
 $progress = new ProgressBar($options, 1000, 100, '#', ' ');
 echo "\n";

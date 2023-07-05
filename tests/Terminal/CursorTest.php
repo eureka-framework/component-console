@@ -31,7 +31,14 @@ class CursorTest extends TestCase
         return $stream;
     }
 
-    public function testUp(): void
+    /**
+     * @param string $method
+     * @param string $expect
+     * @return void
+     *
+     * @dataProvider methodAndExpectProvider
+     */
+    public function testMethod(string $method, string $expect): void
     {
         //~ Given
         $stream = $this->getStream();
@@ -39,11 +46,37 @@ class CursorTest extends TestCase
 
         //~ When
         $cursor = new Cursor(new StreamOutput($stream, false));
-        $cursor->up();
+        $cursor->$method();
 
         //~ Then
         fseek($stream, 0);
         $string = fgets($stream);
-        $this->assertSame("{$csi}1A", $string);
+        $this->assertSame($expect, $string);
+    }
+
+    /**
+     * @return array<string, string[]>
+     */
+    public static function methodAndExpectProvider(): array
+    {
+        $csi    = Terminal::CSI;
+        return [
+            'up'         => ['up', "{$csi}1A"],
+            'down'       => ['down', "{$csi}1B"],
+            'right'      => ['right', "{$csi}1C"],
+            'left'       => ['left', "{$csi}1D"],
+            'lineDown'   => ['lineDown', "{$csi}1E"],
+            'lineUp'     => ['lineUp', "{$csi}1F"],
+            'column'     => ['column', "{$csi}1G"],
+            'to'         => ['to', "{$csi}1;1H"],
+            'clear'      => ['clear', "{$csi}2J"],
+            'clearLine'  => ['clearLine', "{$csi}2K"],
+            'scrollUp'   => ['scrollUp', "{$csi}1S"],
+            'scrollDown' => ['scrollDown', "{$csi}1T"],
+            'save'       => ['save', "{$csi}s"],
+            'restore'    => ['restore', "{$csi}u"],
+            'show'       => ['show', "{$csi}?25h"],
+            'hide'       => ['hide', "{$csi}?25l"],
+        ];
     }
 }

@@ -13,7 +13,7 @@ namespace Eureka\Component\Console\Tests\Option;
 
 use Eureka\Component\Console\Exception\InvalidOptionException;
 use Eureka\Component\Console\Option\Option;
-use Eureka\Component\Console\Option\OptionParser;
+use Eureka\Component\Console\Option\OptionsParser;
 use Eureka\Component\Console\Option\Options;
 use PHPUnit\Framework\TestCase;
 
@@ -42,7 +42,7 @@ class OptionsTest extends TestCase
         $mockArguments = ['--color'];
 
         //~ When
-        $options = (new OptionParser($options))->parse($mockArguments);
+        $options = (new OptionsParser($options))->parse($mockArguments);
 
         //~ Then
         $this->assertTrue($options->has('color'));
@@ -55,7 +55,7 @@ class OptionsTest extends TestCase
         $mockArguments = ['-c'];
 
         //~ When
-        $options = (new OptionParser($options))->parse($mockArguments);
+        $options = (new OptionsParser($options))->parse($mockArguments);
 
         //~ Then
         $this->assertTrue($options->has('c'));
@@ -68,7 +68,7 @@ class OptionsTest extends TestCase
         $mockArguments = ['--id=15'];
 
         //~ When
-        $options = (new OptionParser($options))->parse($mockArguments);
+        $options = (new OptionsParser($options))->parse($mockArguments);
 
         //~ Then
         $this->assertTrue($options->has('id'), var_export($options, true));
@@ -82,7 +82,7 @@ class OptionsTest extends TestCase
         $mockArguments = ['-i', '15'];
 
         //~ When
-        $options = (new OptionParser($options))->parse($mockArguments);
+        $options = (new OptionsParser($options))->parse($mockArguments);
 
         //~ Then
         $this->assertTrue($options->has('i'));
@@ -96,7 +96,7 @@ class OptionsTest extends TestCase
         $mockArguments = ['-i15'];
 
         //~ When
-        $options = (new OptionParser($options))->parse($mockArguments);
+        $options = (new OptionsParser($options))->parse($mockArguments);
 
         //~ Then
         $this->assertTrue($options->has('i'));
@@ -110,7 +110,7 @@ class OptionsTest extends TestCase
         $mockArguments = ['-abc'];
 
         //~ When
-        $options = (new OptionParser($options))->parse($mockArguments);
+        $options = (new OptionsParser($options))->parse($mockArguments);
 
         //~ Then
         $this->assertTrue($options->has('a'));
@@ -125,7 +125,7 @@ class OptionsTest extends TestCase
         $mockArguments = ['--foo=bar', '-f', 'baz'];
 
         //~ When
-        $options = (new OptionParser($options))->parse($mockArguments);
+        $options = (new OptionsParser($options))->parse($mockArguments);
         $options->add(new Option(shortName: 'f', default: 'bal'));
 
         //~ Then
@@ -141,7 +141,7 @@ class OptionsTest extends TestCase
         $mockArguments = ['bin/console', 'script/name'];
 
         //~ When
-        $options = (new OptionParser($options))->parse($mockArguments);
+        $options = (new OptionsParser($options))->parse($mockArguments);
 
         //~ Then
         $this->assertTrue($options->has('script'));
@@ -158,7 +158,7 @@ class OptionsTest extends TestCase
         $mockArguments = ['--foo=bar', '-b', 'baz'];
 
         //~ When
-        $options = (new OptionParser($options))->parse($mockArguments);
+        $options = (new OptionsParser($options))->parse($mockArguments);
 
         //~ Then
         $this->assertTrue($options->has('foo'));
@@ -174,7 +174,7 @@ class OptionsTest extends TestCase
         $mockArguments = ['--foo=bar'];
 
         //~ When
-        $options = (new OptionParser($options))->parse($mockArguments);
+        $options = (new OptionsParser($options))->parse($mockArguments);
 
         //~ Then
         $this->assertFalse($options->has('baz'));
@@ -189,7 +189,7 @@ class OptionsTest extends TestCase
         $mockArguments = ['--foo=bar', '-f', 'baz'];
 
         //~ When
-        $options = (new OptionParser($options))->parse($mockArguments);
+        $options = (new OptionsParser($options))->parse($mockArguments);
 
         foreach ($options as $option) {
             $this->assertInstanceOf(Option::class, $option);
@@ -203,7 +203,7 @@ class OptionsTest extends TestCase
         $mockArguments = ['--foo=bar', '-f', 'baz'];
 
         //~ When
-        $options = (new OptionParser($options))->parse($mockArguments);
+        $options = (new OptionsParser($options))->parse($mockArguments);
 
         $this->assertCount(2, $options, var_export($options, true));
     }

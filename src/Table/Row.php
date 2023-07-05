@@ -57,17 +57,17 @@ class Row
      * @param Border $border
      * @return string
      */
-    public function render(array $columns, Border $border, Options $options): string
+    public function render(array $columns, Border $border): string
     {
         $cells = [];
         foreach ($this->cells as $index => $cell) {
             $column = $columns[$index];
             $style = $this->style->inheritFrom($column->getStyle());
 
-            $cells[] = $cell->render($style, $options);
+            $cells[] = $cell->render($style);
         }
 
-        [$glue, $left, $right] = $border->getChars($options);
+        [$glue, $left, $right] = $border->getChars();
 
         return $left . implode($glue, $cells) . $right;
     }

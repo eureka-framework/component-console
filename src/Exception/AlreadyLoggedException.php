@@ -12,11 +12,6 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Exception;
 
-/**
- * Class AlreadyLoggedException
- *
- * @author Romain Cottard
- */
 class AlreadyLoggedException extends \RuntimeException
 {
 }

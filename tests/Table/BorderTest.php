@@ -54,7 +54,7 @@ class BorderTest extends TestCase
     /**
      * @return array<string,array<int|bool|array<string>>>
      */
-    public function borderProvider(): array
+    public static function borderProvider(): array
     {
         return [
             'default row'                  => [
@@ -162,7 +162,7 @@ class BorderTest extends TestCase
     /**
      * @return array<string,array<int|bool|array<string>>>
      */
-    public function borderExpendedAsciiProvider(): array
+    public static function borderExpendedAsciiProvider(): array
     {
         return [
             'default row'                  => [

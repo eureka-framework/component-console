@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Option;
 
-class OptionParser
+class OptionsParser
 {
     public function __construct(private readonly Options $declaredOptions)
     {
@@ -27,7 +27,7 @@ class OptionParser
     {
         $argv ??= ($_SERVER['argv'] ?? []);
 
-        $options  = $this->declaredOptions;
+        $options  = clone $this->declaredOptions;
         $iterator = new OptionsIterator($argv);
 
         foreach ($iterator as $name) {
@@ -116,10 +116,10 @@ class OptionParser
 
         //~ Handle case '-o' and case '-opt' (equivalent to -o -p -t)
         for ($letter = 0; $letter < $len; $letter++) {
-            if ($this->declaredOptions->has($name)) {
+            if ($this->declaredOptions->has($name[$letter])) {
                 $option = $this->declaredOptions->get($name[$letter])->setArgument($argument);
             } else {
-                $option = (new Option(longName: $name[$letter]))->setArgument($argument);
+                $option = (new Option(shortName: $name[$letter]))->setArgument($argument);
             }
 
             $options->add($option);

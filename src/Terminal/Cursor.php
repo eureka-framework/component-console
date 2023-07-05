@@ -23,8 +23,10 @@ use Eureka\Component\Console\Output\StreamOutput;
  */
 class Cursor
 {
-    public function __construct(private readonly Output $output)
-    {
+    public function __construct(
+        private readonly Output $output,
+        private readonly Shell $shell = new Shell(),
+    ) {
     }
 
     public function up(int $lines = 1): static
@@ -117,18 +119,19 @@ class Cursor
 
     /**
      * @return array{int, int}
+     * @codeCoverageIgnore
      */
     public function position(): array
     {
         //~ Store current mode to restore it after
-        $mode = (string) shell_exec('stty -g');
+        $mode = (string) $this->shell->exec('stty -g');
 
         if (empty($mode)) {
             return [1, 1];
         }
 
         //~ enable control chars & enable displaying it
-        shell_exec('stty -icanon -echo');
+        $this->shell->exec('stty -icanon -echo');
 
         //~ Write on input the following command will return the cursor position in this format "\033[{LINE};{COL}R"
         (new StreamOutput(\STDIN, false))->write(Terminal::CSI . '6n');
@@ -137,10 +140,10 @@ class Cursor
         $code = (new StreamInput(\STDIN))->readString();
 
         //~ Restore the stty to original mode
-        shell_exec("stty $mode");
+        $this->shell->exec("stty $mode");
 
         //~ Parse returned response code
-        sscanf($code, Terminal::CSI . '%d;%dR', $line, $col);
+        \sscanf($code, Terminal::CSI . '%d;%dR', $line, $col);
 
         return [(int) $col, (int) $line];
     }

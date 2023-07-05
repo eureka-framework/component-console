@@ -37,6 +37,18 @@ class Style
     protected bool $invert = false;
     protected bool $strike = false;
 
+    protected bool $noColor = false;
+
+    public function __construct(?Options $options = null)
+    {
+        if (
+            ($options !== null && $options->has('no-color') && $options->get('no-color')->getArgument()) ||
+            !empty(getenv('NO_COLOR'))
+        ) {
+            $this->noColor = true;
+        }
+    }
+
     public function color(Color $color): static
     {
         $this->fgColor = $color;
@@ -101,7 +113,7 @@ class Style
         return $this;
     }
 
-    public function apply(string|\Stringable|int|float|null $text, Options|null $options = null): string
+    public function apply(string|\Stringable|int|float|null $text): string
     {
         $csi = Terminal::CSI;
 
@@ -137,7 +149,7 @@ class Style
             $styledText = "{$csi}9m{$styledText}";
         }
 
-        if ($options === null || !$options->has('no-color')) {
+        if (!$this->noColor) {
             $styledText = $this->applyColor($styledText);
             $styledText = $this->applyBackground($styledText);
         }

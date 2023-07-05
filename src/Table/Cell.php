@@ -32,7 +32,7 @@ class Cell
         return $this->content;
     }
 
-    public function render(CellStyle $inheritedStyle, Options $options): string
+    public function render(CellStyle $inheritedStyle): string
     {
         $style = $this->style->inheritFrom($inheritedStyle);
 
@@ -48,6 +48,6 @@ class Cell
         $content = $style->hasPaddingSpace() ? " $content " : $content;
         $content = str_pad($content, $style->getWidth(), ' ', $style->getAlign()->value);
 
-        return $style->apply($content, $options);
+        return $style->apply($content);
     }
 }

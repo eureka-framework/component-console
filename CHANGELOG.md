@@ -17,6 +17,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ----
 
+## [6.0.0] - 2023-07-06
+[6.0.0]: https://github.com/eureka-framework/component-console/compare/5.3.1...6.0.0
+### Added
+- Terminal, Cursor & Shell classes
+- Options, Option & OptionsParser classes
+- Add Output & Input classes
+- Add lots of tests
+- Add some examples
+- Add lots of Color classes
+### Changed
+- Rework Progress
+- Rework Style
+- Rework Table & elements for tables
+- Update Makefile
+- Update composer.json (now allow PSR log from v1 to v3)
+- Now require PHP 8.1 as minimum version
+### Removed
+- Remove IO class
+- Remove Color class
+- Remove Arguments & related classes
+
 ## [5.3.1] - 2023-06-14
 [5.3.1]: https://github.com/eureka-framework/component-console/compare/5.3.0...5.3.1
 ### Added

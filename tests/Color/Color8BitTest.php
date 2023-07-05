@@ -76,7 +76,7 @@ class Color8BitTest extends TestCase
     /**
      * @return array<string, int[]>
      */
-    public function correctRGBProvider(): array
+    public static function correctRGBProvider(): array
     {
         return [
             'RGB "black"' => [0, 0, 0, 16],
@@ -105,7 +105,7 @@ class Color8BitTest extends TestCase
     /**
      * @return array<string, int[]>
      */
-    public function incorrectRGBProvider(): array
+    public static function incorrectRGBProvider(): array
     {
         return [
             'RGB below 0 for red part'   => [-1, 0, 0],

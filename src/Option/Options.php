@@ -50,7 +50,9 @@ class Options implements \Iterator, \Countable
         //~ Get index key & add to keys for iteration
         $key = (string) ($option->getLongName() !== null ? $option->getLongName() : $option->getShortName());
 
-        $this->keys[] = $key;
+        if (!in_array($key, $this->keys)) {
+            $this->keys[] = $key;
+        }
 
         return $this;
     }

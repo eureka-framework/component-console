@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Eureka\Component\Console\Tests\Table;
 
 use Eureka\Component\Console\Color\Bit8StandardColor;
+use Eureka\Component\Console\Option\Option;
 use Eureka\Component\Console\Option\Options;
 use Eureka\Component\Console\Style\CellStyle;
 use Eureka\Component\Console\Style\Style;
@@ -21,6 +22,7 @@ use Eureka\Component\Console\Table\Cell;
 use Eureka\Component\Console\Table\Column;
 use Eureka\Component\Console\Table\Row;
 use Eureka\Component\Console\Table\Table;
+use Eureka\Component\Console\Terminal\Terminal;
 use PHPUnit\Framework\TestCase;
 
 class TableTest extends TestCase
@@ -28,7 +30,6 @@ class TableTest extends TestCase
     public function testICanGetBasicTable(): void
     {
         //~ Given
-        $options = new Options();
         $expected = <<<TABLE
         ╔══════════╤══════════╤══════════╗
         ║ 1        │ 2        │ 3        ║
@@ -39,7 +40,7 @@ class TableTest extends TestCase
 
 
         //~ When
-        $table   = new Table($options, 3);
+        $table   = new Table(3);
         $table->newRow([1, 2, 3]);
         $table->newRow([4, 5, 6]);
 
@@ -60,7 +61,7 @@ class TableTest extends TestCase
         TABLE;
 
         //~ When
-        $table   = new Table($options, 3);
+        $table   = new Table(3);
         $table->newRow([1, 2, 3]);
         $table->newRow(["text", "very long text", 1.2]);
 
@@ -83,7 +84,7 @@ class TableTest extends TestCase
         TABLE;
 
         //~ When
-        $table   = new Table($options, 3);
+        $table   = new Table(3);
         $table->newRow(['Col 1', 'Col 2', 'Col 3'], true);
         $table->newRow([1, 2, 3]);
         $table->newRow(["text", "very long text", 1.2]);
@@ -95,7 +96,6 @@ class TableTest extends TestCase
     public function testICanGetComplexTable(): void
     {
         //~ Given
-        $options = new Options();
         $expected = <<<TABLE
         ╔════════════════════════════════╗
         ║     Table With Span Header     ║
@@ -124,7 +124,7 @@ class TableTest extends TestCase
         TABLE;
 
         //~ When
-        $table   = new Table($options, 3);
+        $table   = new Table(3);
         $table->newRowSpan('Table With Span Header', true);
         $table->newRow(['Col 1', 'Col 2', 'Col 3'], true);
         $table->newRow([1, 2, 3]);
@@ -147,7 +147,6 @@ class TableTest extends TestCase
     public function testICanGetComplexTableWithStyle(): void
     {
         //~ Given
-        $options = new Options();
         $expected = <<<TABLE
         [38;5;2m╔[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m╤[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m╤[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m═[0m[38;5;2m╗[0m
         [38;5;2m║[0m Col 1    [38;5;2m│[0m Col 2    [38;5;2m│[0m[48;5;1m  Col 3   [0m[38;5;2m║[0m
@@ -160,7 +159,6 @@ class TableTest extends TestCase
 
         //~ When
         $table = new Table(
-            $options,
             [
                 new Column(),
                 new Column(),
@@ -172,6 +170,38 @@ class TableTest extends TestCase
         $table->newRow(['Col 1', 'Col 2', 'Col 3'], true);
         $table->newRow([1, 2, 3]);
         $table->newRow(["text", "very long text", $cell], false, (new CellStyle())->underline());
+
+        //~ Then
+        $this->assertSame($expected, $table->render());
+    }
+
+    public function testICanGetComplexTableWithStyleAndNoColorOption(): void
+    {
+        //~ Given
+        $options  = (new Options())->add(new Option('no-color', default: true));
+        $expected = <<<TABLE
+        ╔══════════╤══════════╤══════════╗
+        ║ Col 1    │ Col 2    │  Col 3   ║
+        ╠══════════╪══════════╪══════════╣
+        ║ 1        │ 2        │    3     ║
+        ║[4m text     [0m│[4m very lo… [0m│[4m      1.2 [0m║
+        ╚══════════╧══════════╧══════════╝
+
+        TABLE;
+
+        //~ When
+        $table = new Table(
+            [
+                new Column(),
+                new Column(),
+                new Column((new CellStyle($options, align: Align::Center))->background(Bit8StandardColor::Red))
+            ],
+            new Border(style: (new Style($options))->color(Bit8StandardColor::Green))
+        );
+        $cell = new Cell(1.2, (new CellStyle($options, align: Align::Right))->background(Bit8StandardColor::Cyan));
+        $table->newRow(['Col 1', 'Col 2', 'Col 3'], true);
+        $table->newRow([1, 2, 3]);
+        $table->newRow(["text", "very long text", $cell], false, (new CellStyle($options))->underline());
 
         //~ Then
         $this->assertSame($expected, $table->render());

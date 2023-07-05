@@ -38,7 +38,7 @@ class Color24BitTest extends TestCase
     /**
      * @return array<string, array<int|int[]>>
      */
-    public function correctRGBProvider(): array
+    public static function correctRGBProvider(): array
     {
         return [
             'RGB "black"' => [0, 0, 0, [0, 0, 0]],
@@ -67,7 +67,7 @@ class Color24BitTest extends TestCase
     /**
      * @return array<string, array<int|int[]>>
      */
-    public function incorrectRGBProvider(): array
+    public static function incorrectRGBProvider(): array
     {
         return [
             'RGB below 0 for red part'   => [-1, 0, 0],

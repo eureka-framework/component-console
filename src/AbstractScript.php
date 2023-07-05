@@ -11,7 +11,10 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console;
 
+use Eureka\Component\Console\Exception\ScriptException;
 use Eureka\Component\Console\Input\Input;
+use Eureka\Component\Console\Option\OptionsParser;
+use Eureka\Component\Console\Option\Options;
 use Eureka\Component\Console\Output\Output;
 
 /**
@@ -28,9 +31,11 @@ abstract class AbstractScript implements ScriptInterface
     /** @var string $description Console script description. */
     private string $description = 'Script description for Help !';
 
-    protected Input|null $input = null;
-    protected Output|null $output = null;
-    protected Output|null $outputErr = null;
+    private Input|null $input = null;
+    private Output|null $output = null;
+    private Output|null $outputErr = null;
+    private Options|null $options = null;
+    private Options|null $declaredOptions = null;
 
     /**
      * Help method.
@@ -126,5 +131,69 @@ abstract class AbstractScript implements ScriptInterface
      */
     public function after(): void
     {
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function output(): Output
+    {
+        if ($this->output === null) {
+            throw new ScriptException('Output must be defined before using it!');
+        }
+
+        return $this->output;
+    }
+
+    protected function initOptions(Options $options): void
+    {
+        $this->declaredOptions = $options;
+        $this->options         = (new OptionsParser($options))->parse();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function declaredOptions(): Options
+    {
+        if ($this->declaredOptions === null) {
+            throw new ScriptException('Declared options must be defined before using it!');
+        }
+        return $this->declaredOptions;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function options(): Options
+    {
+        if ($this->options === null) {
+            throw new ScriptException('Options must be defined before using it!');
+        }
+        return $this->options;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function outputErr(): Output
+    {
+        if ($this->outputErr === null) {
+            throw new ScriptException('OutputErr must be defined before using it!');
+        }
+
+        return $this->outputErr;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function input(): Input
+    {
+        if ($this->input === null) {
+            throw new ScriptException('Input must be defined before using it!');
+        }
+
+        return $this->input;
     }
 }

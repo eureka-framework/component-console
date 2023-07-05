@@ -127,24 +127,24 @@ class Border
     /**
      * @return array<string>
      */
-    public function getChars(Options|null $options = null): array
+    public function getChars(): array
     {
         $glue  = $this->getVertical(self::SIMPLE);
         $left  = $this->getVertical($this->thicknessOut);
         $right = $this->getVertical($this->thicknessOut);
 
         return [
-            $this->style->apply($glue, $options),
-            $this->style->apply($left, $options),
-            $this->style->apply($right, $options),
+            $this->style->apply($glue),
+            $this->style->apply($left),
+            $this->style->apply($right),
         ];
     }
 
-    public function getCharLine(int $thickness, Options|null $options = null): string
+    public function getCharLine(int $thickness): string
     {
         $char = $this->getHorizontal($thickness);
 
-        return $this->style->apply($char, $options);
+        return $this->style->apply($char);
     }
 
     /**
@@ -152,7 +152,7 @@ class Border
      * @param int $type
      * @return array<string>
      */
-    public function getCharsInnerBar(int $thickness, int $type, Options|null $options = null): array
+    public function getCharsInnerBar(int $thickness, int $type): array
     {
         $horizontalThickness = $thickness;
         $verticalThickness   = $thickness === self::SIMPLE ? self::MIXED : self::DOUBLE;
@@ -210,9 +210,9 @@ class Border
         }
 
         return [
-            $this->style->apply($glue, $options),
-            $this->style->apply($left, $options),
-            $this->style->apply($right, $options),
+            $this->style->apply($glue),
+            $this->style->apply($left),
+            $this->style->apply($right),
         ];
     }
 

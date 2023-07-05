@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Style;
 
+use Eureka\Component\Console\Option\Options;
 use Eureka\Component\Console\Table\Align;
 
 /**
@@ -25,10 +26,12 @@ class CellStyle extends Style
     private const DEFAULT_PADDING_SPACE = true;
 
     public function __construct(
+        Options $options = new Options(),
         private int $width = self::DEFAULT_WIDTH,
         private Align $align = self::DEFAULT_ALIGN,
         private bool $paddingSpace = self::DEFAULT_PADDING_SPACE,
     ) {
+        parent::__construct($options);
     }
 
     public function inheritFrom(CellStyle|null $inheritedStyle): CellStyle

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Table;
 
-use Eureka\Component\Console\Option\Options;
 use Eureka\Component\Console\Style\CellStyle;
 
 class Table
@@ -26,7 +25,6 @@ class Table
      * @param int|Column[] $columns
      */
     public function __construct(
-        private readonly Options $options,
         int|array $columns,
         private readonly Border $border = new Border(),
     ) {
@@ -114,7 +112,7 @@ class Table
                 $table[] = $this->renderBorder(Border::DOUBLE, $type);
             }
 
-            $table[] = $row->render($this->columns, $this->border, $this->options);
+            $table[] = $row->render($this->columns, $this->border);
             $isBarForPreviousRow = false;
 
             if ($row->isHeader() && ($this->rows[($index + 1)] ?? null) !== null) {
@@ -150,8 +148,8 @@ class Table
 
     private function renderBorder(int $thickness, int $type): string
     {
-        $char = $this->border->getCharLine($thickness, $this->options);
-        [$glue, $left, $right] = $this->border->getCharsInnerBar($thickness, $type, $this->options);
+        $char = $this->border->getCharLine($thickness);
+        [$glue, $left, $right] = $this->border->getCharsInnerBar($thickness, $type);
 
         $lines = [];
         foreach ($this->columns as $column) {

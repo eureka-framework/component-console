@@ -26,8 +26,9 @@ class Help
 {
     public function __construct(
         private readonly string $scriptName,
-        private readonly Options $options,
+        private readonly Options $declaredOptions,
         private readonly Output $output,
+        private readonly Options $parsedOptions = new Options()
     ) {
     }
 
@@ -46,27 +47,27 @@ class Help
         $this->output->writeln('');
 
         $this->output->write(
-            (new Style())
+            (new Style($this->parsedOptions))
                 ->color(Bit4HighColor::Green)
                 ->bold()
                 ->apply('Use    : ')
         );
 
         $this->output->writeln(
-            (new Style())
+            (new Style($this->parsedOptions))
                 ->color(Bit4HighColor::White)
                 ->bold()
                 ->apply("bin/console $this->scriptName [OPTION]...")
         );
 
         $this->output->writeln(
-            (new Style())
+            (new Style($this->parsedOptions))
                 ->color(Bit4StandardColor::Green)
                 ->bold()
                 ->apply('OPTIONS:')
         );
 
-        foreach ($this->options as $option) {
+        foreach ($this->declaredOptions as $option) {
             $line = '  ';
 
             if (!empty($option->getShortName())) {
@@ -88,11 +89,11 @@ class Help
                 }
             }
 
-            $line = (new Style())->bold()->apply(str_pad($line, 40));
+            $line = (new Style($this->parsedOptions))->bold()->apply(str_pad($line, 40));
             $line .= $option->getDescription();
 
             if ($option->isMandatory()) {
-                $line .= (new Style())->color(Bit4StandardColor::Red)->apply(' - MANDATORY');
+                $line .= (new Style($this->parsedOptions))->color(Bit4StandardColor::Red)->apply(' - MANDATORY');
             }
 
             $this->output->writeln($line);
