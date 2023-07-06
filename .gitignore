@@ -6,9 +6,12 @@ composer.lock
 #~ Tests
 /build/*
 .phpunit.result.cache
+.phpunit.cache/
 
 #~ Misc
 .idea
+oldtests/
+oldtable/
 
 #~ Overridden condigs
 phpstan.neon

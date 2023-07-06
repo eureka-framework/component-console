@@ -11,7 +11,13 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Style;
 
-use Eureka\Component\Console\Argument\Argument;
+use Eureka\Component\Console\Color\Bit24Color;
+use Eureka\Component\Console\Color\Bit4Color;
+use Eureka\Component\Console\Color\Bit4StandardColor;
+use Eureka\Component\Console\Color\Bit8Color;
+use Eureka\Component\Console\Color\Color;
+use Eureka\Component\Console\Option\Options;
+use Eureka\Component\Console\Terminal\Terminal;
 
 /**
  * Add style to text for unix terminal display.
@@ -20,296 +26,172 @@ use Eureka\Component\Console\Argument\Argument;
  */
 class Style
 {
-    /** @var string DECORATION_NONE Index color character for no decoration. */
-    const DECORATION_NONE = '0;';
+    protected Color|null $fgColor = null;
+    protected Color|null $bgColor = null;
+    protected bool $bold = false;
+    protected bool $faint = false;
+    protected bool $italic = false;
+    protected bool $underline = false;
+    protected bool $blink = false;
+    protected bool $fastBlink = false;
+    protected bool $invert = false;
+    protected bool $strike = false;
 
-    /** @var string DECORATION_BOLD Index color character for text bold decoration. */
-    const DECORATION_BOLD = '1;';
+    protected bool $noColor = false;
 
-    /** @var string DECORATION_UNDERLINE Index color character text underline decoration. */
-    const DECORATION_UNDERLINE = '4;';
-
-    /** @var string REGULAR_FOREGROUND Index color character normal foreground. */
-    const REGULAR_FOREGROUND = '3';
-
-    /** @var string REGULAR_BACKGROUND Index color character normal background. */
-    const REGULAR_BACKGROUND = '4';
-
-    /** @var string HIGH_FOREGROUND Index color character highlight foreground. */
-    const HIGH_FOREGROUND = '9';
-
-    /** @var string HIGH_BACKGROUND Index color character highlight background. */
-    const HIGH_BACKGROUND = '10';
-
-    /** @var string BEGIN First characters for color text. (internal constant) */
-    const BEGIN = "\033[";
-
-    /** @var string END Last characters for color text. (internal constant) */
-    const END = 'm';
-
-    /** @var string DEACTIVATE Last characters for stopping color text. (internal constant) */
-    const DEACTIVATE = "\033[0m";
-
-    /** @var string $foregroundColor Foreground color character */
-    protected string $foregroundColor = Color::WHITE;
-
-    /** @var string $foregroundColor Foreground color character */
-    protected string $backgroundColor = '';
-
-    /** @var string $text Text to style */
-    protected string $text = '';
-
-    /** @var bool $isUnderline If text is underlined */
-    protected bool $isUnderline = false;
-
-    /** @var bool $isBold If text is bolded */
-    protected bool $isBold = false;
-
-    /** @var bool $hasHighlightedBackground If background has highlighted color. */
-    protected bool $hasHighlightedBackground = false;
-
-    /** @var bool $hasHighlightedBackground If background has highlighted color. */
-    protected bool $hasHighlightedForeground = false;
-
-    /** @var int $padNb Pad number of char */
-    protected int $padNb = 0;
-
-    /** @var string $padChar Pad char */
-    protected string $padChar = ' ';
-
-    /** @var int $padDir Pad direction */
-    protected int $padDir = STR_PAD_RIGHT;
-
-    /** @var bool $isStyleEnabled */
-    protected bool $isStyleEnabled = true;
-
-    /**
-     * Class constructor
-     *
-     * @param string $text
-     */
-    public function __construct(string $text = '')
+    public function __construct(?Options $options = null)
     {
-        $this->text           = $text;
-        $this->isStyleEnabled = Argument::getInstance()->has('color');
+        if (
+            ($options !== null && $options->has('no-color') && $options->get('no-color')->getArgument()) ||
+            !empty(getenv('NO_COLOR'))
+        ) {
+            $this->noColor = true;
+        }
     }
 
-    /**
-     * Enable / Disable underline style.
-     *
-     * @param bool $isUnderline
-     * @return $this
-     */
-    public function underline(bool $isUnderline = true): self
+    public function color(Color $color): static
     {
-        $this->isUnderline = $isUnderline;
+        $this->fgColor = $color;
 
         return $this;
     }
 
-    /**
-     * Enable / Disable bold style.
-     *
-     * @param bool $isBold
-     * @return $this
-     */
-    public function bold(bool $isBold = true): self
+    public function background(Color $color): static
     {
-        $this->isBold = $isBold;
+        $this->bgColor = $color;
 
         return $this;
     }
 
-    /**
-     * Enable / Disable highlight on background or foreground
-     *
-     * @param  string  $type
-     * @param  bool $isHighlight
-     * @return $this
-     */
-    public function highlight(string $type = 'bg', bool $isHighlight = true): self
+    public function bold(bool $bold = true): static
     {
-        if ($type === 'bg') {
-            $this->highlightBackground($isHighlight);
-        } else {
-            $this->highlightForeground($isHighlight);
+        $this->bold = $bold;
+
+        return $this;
+    }
+
+    public function faint(bool $faint = true): static
+    {
+        $this->faint = $faint;
+
+        return $this;
+    }
+
+    public function italic(bool $italic = true): static
+    {
+        $this->italic = $italic;
+
+        return $this;
+    }
+
+    public function underline(bool $underline = true): static
+    {
+        $this->underline = $underline;
+
+        return $this;
+    }
+
+    public function blink(bool $blink = true, bool $fast = false): static
+    {
+        $this->blink     = $blink;
+        $this->fastBlink = $fast;
+
+        return $this;
+    }
+
+    public function invert(bool $invert = true): static
+    {
+        $this->invert = $invert;
+
+        return $this;
+    }
+
+    public function strike(bool $strike = true): static
+    {
+        $this->strike = $strike;
+
+        return $this;
+    }
+
+    public function apply(string|\Stringable|int|float|null $text): string
+    {
+        $csi = Terminal::CSI;
+
+        $styledText = (string) $text;
+
+        if ($this->bold) {
+            $styledText = "{$csi}1m{$styledText}";
         }
 
-        return $this;
-    }
-
-    /**
-     * Enable / Disable highlight on background
-     *
-     * @param  bool $isHighlight
-     * @return $this
-     */
-    public function highlightBackground(bool $isHighlight = true): self
-    {
-        $this->hasHighlightedBackground = $isHighlight;
-
-        return $this;
-    }
-
-    /**
-     * Enable / Disable highlight on background or foreground
-     *
-     * @param  bool $isHighlight
-     * @return $this
-     */
-    public function highlightForeground(bool $isHighlight = true): self
-    {
-        $this->hasHighlightedForeground = $isHighlight;
-
-        return $this;
-    }
-
-    /**
-     * Set color for background / foreground
-     *
-     * @param  string $type
-     * @param  string $color
-     * @return $this
-     */
-    public function color(string $type = 'bg', string $color = Color::WHITE): self
-    {
-        if ($type === 'bg') {
-            $this->colorBackground($color);
-        } else {
-            $this->colorForeground($color);
+        if ($this->faint) {
+            $styledText = "{$csi}2m{$styledText}";
         }
 
-        return $this;
-    }
-
-    /**
-     * Set color for background
-     *
-     * @param  string $color
-     * @return $this
-     */
-    public function colorBackground(string $color = Color::WHITE): self
-    {
-        $this->backgroundColor = $color;
-
-        return $this;
-    }
-
-    /**
-     * Set color for foreground
-     *
-     * @param  string $color
-     * @return $this
-     */
-    public function colorForeground(string $color = Color::WHITE): self
-    {
-        $this->foregroundColor = $color;
-
-        return $this;
-    }
-
-    /**
-     * Get text with styles.
-     *
-     * @return string
-     */
-    public function get(): string
-    {
-        $textDisplay = $this->text;
-
-        if ($this->padNb > 0) {
-            $textDisplay = str_pad($textDisplay, $this->padNb, $this->padChar, $this->padDir);
+        if ($this->italic) {
+            $styledText = "{$csi}3m{$styledText}";
         }
 
-        if (!$this->isStyleEnabled) {
-            return $textDisplay;
+        if ($this->underline) {
+            $styledText = "{$csi}4m{$styledText}";
         }
 
-        $text = '';
-        if ($this->foregroundColor !== '' || $this->isBold || $this->isUnderline || $this->hasHighlightedForeground) {
-            $highlight = '';
-            //~ Highlight
-            if ($this->foregroundColor !== '') {
-                $highlight = $this->hasHighlightedForeground ? static::HIGH_FOREGROUND : static::REGULAR_FOREGROUND;
-            }
-
-            //~ Decoration
-            $decoration  = $this->isBold ? static::DECORATION_BOLD : '';
-            $decoration .= $this->isUnderline ? static::DECORATION_UNDERLINE : '';
-            $decoration  = !empty($decoration) ? $decoration : static::DECORATION_NONE;
-
-            //~ Apply style
-            $text .= self::BEGIN . $decoration . $highlight . $this->foregroundColor . self::END;
+        if ($this->blink && !$this->fastBlink) {
+            $styledText = "{$csi}5m{$styledText}";
+        } elseif ($this->blink) {
+            $styledText = "{$csi}6m{$styledText}";
         }
 
-        if ($this->backgroundColor !== '' || $this->hasHighlightedBackground) {
-            $highlight = '';
-            if ($this->backgroundColor !== '') {
-                $highlight = $this->hasHighlightedBackground ? static::HIGH_BACKGROUND : static::REGULAR_BACKGROUND;
-            }
-            $text .= self::BEGIN . $highlight . $this->backgroundColor . self::END;
+        if ($this->invert) {
+            $styledText = "{$csi}7m{$styledText}";
         }
 
-        return $text . $textDisplay . self::DEACTIVATE;
+        if ($this->strike) {
+            $styledText = "{$csi}9m{$styledText}";
+        }
+
+        if (!$this->noColor) {
+            $styledText = $this->applyColor($styledText);
+            $styledText = $this->applyBackground($styledText);
+        }
+
+        if ($styledText !== $text) {
+            $styledText = "{$styledText}{$csi}0m";
+        }
+
+        return $styledText;
     }
 
-    /**
-     * Reset styles.
-     *
-     * @return $this
-     */
-    public function reset(): self
+    private function applyColor(string $styledText): string
     {
-        $this->isBold                   = false;
-        $this->isUnderline              = false;
-        $this->hasHighlightedBackground = false;
-        $this->hasHighlightedForeground = false;
-        $this->backgroundColor          = '';
-        $this->foregroundColor          = Color::WHITE;
-        $this->padNb                    = 0;
-        $this->padChar                  = ' ';
-        $this->padDir                   = STR_PAD_RIGHT;
+        $csi = Terminal::CSI;
 
-        return $this;
+        if ($this->fgColor instanceof Bit4Color) {
+            $prefix = $this->fgColor instanceof Bit4StandardColor ? 3 : 9;
+            $styledText = "{$csi}{$prefix}{$this->fgColor->getIndex()}m{$styledText}";
+        } elseif ($this->fgColor instanceof Bit8Color) {
+            $styledText = "{$csi}38;5;{$this->fgColor->getIndex()}m{$styledText}";
+        } elseif ($this->fgColor instanceof Bit24Color) {
+            [$r, $g, $b] = $this->fgColor->rgb();
+            $styledText = "{$csi}38;2;{$r};{$g};{$b}m{$styledText}";
+        }
+
+        return $styledText;
     }
 
-    /**
-     * Set text.
-     *
-     * @param string $text
-     * @return $this
-     */
-    public function setText(string $text = ''): self
+    private function applyBackground(string $styledText): string
     {
-        $this->text = $text;
+        $csi = Terminal::CSI;
 
-        return $this;
-    }
+        if ($this->bgColor instanceof Bit4Color) {
+            $prefix = $this->bgColor instanceof Bit4StandardColor ? 4 : 10;
+            $styledText = "{$csi}{$prefix}{$this->bgColor->getIndex()}m{$styledText}";
+        } elseif ($this->bgColor instanceof Bit8Color) {
+            $styledText = "{$csi}48;5;{$this->bgColor->getIndex()}m{$styledText}";
+        } elseif ($this->bgColor instanceof Bit24Color) {
+            [$r, $g, $b] = $this->bgColor->rgb();
+            $styledText = "{$csi}48;2;{$r};{$g};{$b}m{$styledText}";
+        }
 
-    /**
-     * Set pad for the text.
-     *
-     * @param  int    $pad
-     * @param  string $char
-     * @param  int    $dir
-     * @return $this
-     */
-    public function pad(int $pad, string $char = ' ', int $dir = STR_PAD_RIGHT): self
-    {
-        $this->padNb   = $pad;
-        $this->padChar = $char;
-        $this->padDir  = $dir;
-
-        return $this;
-    }
-
-    /**
-     * Return text with styles.
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->get();
+        return $styledText;
     }
 }

@@ -11,7 +11,11 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console;
 
-use Psr\Container\ContainerInterface;
+use Eureka\Component\Console\Exception\ScriptException;
+use Eureka\Component\Console\Input\Input;
+use Eureka\Component\Console\Option\OptionsParser;
+use Eureka\Component\Console\Option\Options;
+use Eureka\Component\Console\Output\Output;
 
 /**
  * Console Abstraction class.
@@ -27,8 +31,11 @@ abstract class AbstractScript implements ScriptInterface
     /** @var string $description Console script description. */
     private string $description = 'Script description for Help !';
 
-    /** @var ContainerInterface|null $container Set to true to set class as an executable script */
-    private ?ContainerInterface $container = null;
+    private Input|null $input = null;
+    private Output|null $output = null;
+    private Output|null $outputErr = null;
+    private Options|null $options = null;
+    private Options|null $declaredOptions = null;
 
     /**
      * Help method.
@@ -47,21 +54,25 @@ abstract class AbstractScript implements ScriptInterface
     abstract public function run(): void;
 
     /**
-     * @param  ContainerInterface|null $container
-     * @return $this
+     * Set stream input & outputs
+     *
+     * @param Input $input
+     * @param Output $output
+     * @param Output $outputErr
+     * @return void
      */
-    public function setContainer(ContainerInterface $container = null): self
+    public function setStreams(Input $input, Output $output, Output $outputErr): void
     {
-        $this->container = $container;
-
-        return $this;
+        $this->input     = $input;
+        $this->output    = $output;
+        $this->outputErr = $outputErr;
     }
 
     /**
      * @param  string $description
      * @return $this
      */
-    public function setDescription(string $description): self
+    public function setDescription(string $description): static
     {
         $this->description = $description;
 
@@ -72,7 +83,7 @@ abstract class AbstractScript implements ScriptInterface
      * @param  bool $executable
      * @return $this
      */
-    public function setExecutable(bool $executable = true): self
+    public function setExecutable(bool $executable = true): static
     {
         $this->executable = $executable;
 
@@ -87,15 +98,6 @@ abstract class AbstractScript implements ScriptInterface
     public function executable(): bool
     {
         return $this->executable;
-    }
-
-    /**
-     * @return ContainerInterface|null
-     * @codeCoverageIgnore
-     */
-    public function getContainer(): ?ContainerInterface
-    {
-        return $this->container;
     }
 
     /**
@@ -129,5 +131,69 @@ abstract class AbstractScript implements ScriptInterface
      */
     public function after(): void
     {
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function output(): Output
+    {
+        if ($this->output === null) {
+            throw new ScriptException('Output must be defined before using it!');
+        }
+
+        return $this->output;
+    }
+
+    protected function initOptions(Options $options): void
+    {
+        $this->declaredOptions = $options;
+        $this->options         = (new OptionsParser($options))->parse();
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function declaredOptions(): Options
+    {
+        if ($this->declaredOptions === null) {
+            throw new ScriptException('Declared options must be defined before using it!');
+        }
+        return $this->declaredOptions;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function options(): Options
+    {
+        if ($this->options === null) {
+            throw new ScriptException('Options must be defined before using it!');
+        }
+        return $this->options;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function outputErr(): Output
+    {
+        if ($this->outputErr === null) {
+            throw new ScriptException('OutputErr must be defined before using it!');
+        }
+
+        return $this->outputErr;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    protected function input(): Input
+    {
+        if ($this->input === null) {
+            throw new ScriptException('Input must be defined before using it!');
+        }
+
+        return $this->input;
     }
 }

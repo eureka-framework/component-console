@@ -11,11 +11,6 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Exception;
 
-/**
- * Class StopAfterHelpException
- *
- * @author Romain Cottard
- */
 class StopAfterHelpException extends \RuntimeException
 {
 }

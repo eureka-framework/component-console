@@ -11,57 +11,43 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Table;
 
-/**
- * Class Cell
- *
- * @author Romain Cottard
- */
+use Eureka\Component\Console\Option\Options;
+use Eureka\Component\Console\Style\CellStyle;
+
 class Cell
 {
-    const ALIGN_CENTER = STR_PAD_BOTH;
-    const ALIGN_LEFT   = STR_PAD_RIGHT;
-    const ALIGN_RIGHT  = STR_PAD_LEFT;
-
-    private string $content;
-    private int $size;
-    private int $align;
-    private bool $paddingSpace;
-
-    /**
-     * Cell constructor.
-     *
-     * @param string $content
-     * @param int $size
-     * @param int $align
-     * @param bool $paddingSpace
-     */
     public function __construct(
-        string $content,
-        int $size = 13,
-        int $align = Cell::ALIGN_CENTER,
-        bool $paddingSpace = true
+        private readonly string|int|float|bool|null $content,
+        private readonly CellStyle $style = new CellStyle()
     ) {
-        $this->content      = $content;
-        $this->size         = $size;
-        $this->align        = $align;
-        $this->paddingSpace = $paddingSpace;
     }
 
-    /**
-     * @return string
-     */
-    public function render(): string
+    public function getStyle(): CellStyle
     {
-        $content = $this->paddingSpace ? ' ' . $this->content . ' ' : $this->content;
-
-        return str_pad($content, $this->size, ' ', $this->align);
+        return $this->style;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString(): string
+    public function getContent(): string|int|float|bool|null
     {
-        return $this->render();
+        return $this->content;
+    }
+
+    public function render(CellStyle $inheritedStyle): string
+    {
+        $style = $this->style->inheritFrom($inheritedStyle);
+
+        //~ Handle too long content for cell
+        $length  = $style->getWidth() - ($style->hasPaddingSpace() ? 2 : 0);
+        $content = (string) $this->content;
+
+        if (mb_strlen($content) > $length) {
+            $content = mb_substr($content, 0, $length - 1) . '…';
+        }
+
+        //~ Add padding space (if any) & align content in cell
+        $content = $style->hasPaddingSpace() ? " $content " : $content;
+        $content = str_pad($content, $style->getWidth(), ' ', $style->getAlign()->value);
+
+        return $style->apply($content);
     }
 }
