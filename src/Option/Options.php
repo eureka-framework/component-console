@@ -58,7 +58,7 @@ class Options implements \Iterator, \Countable
     }
 
     /**
-     * Get specified argument value.
+     * Get specified option.
      *
      * @param string $name Option name
      * @param string|null $alias Option alias name (if exists)
@@ -83,6 +83,18 @@ class Options implements \Iterator, \Countable
     public function has(string $name, string $alias = null): bool
     {
         return isset($this->options[$name]) || (!empty($alias) && isset($this->options[$alias]));
+    }
+
+    /**
+     * Get value of given option name
+     *
+     * @param string $name Option name
+     * @param string|null $alias Option alias name (if exists)
+     * @return string|int|float|bool|null
+     */
+    public function value(string $name, ?string $alias = null): string|int|float|bool|null
+    {
+        return $this->get($name, $alias)->getArgument();
     }
 
     public function current(): Option

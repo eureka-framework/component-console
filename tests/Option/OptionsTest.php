@@ -46,6 +46,7 @@ class OptionsTest extends TestCase
 
         //~ Then
         $this->assertTrue($options->has('color'));
+        $this->assertTrue($options->value('color'));
     }
 
     public function testOptionsShortNameWithoutValueExists(): void

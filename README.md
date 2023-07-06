@@ -85,6 +85,10 @@ class ExampleScript extends AbstractScript
     {
         $user = $this->options()->get('user', 'u')->getArgument();
         $say  = $this->options()->get('is-night', 'n')->getArgument() ? 'Good night' : 'Hello';
+        
+        //~ Can also use short version:
+        // $user = $this->options()->value('user', 'u');
+        // $say  = $this->options()->value('is-night', 'n') ? 'Good night' : 'Hello';
 
         $this->output()->writeln("$say $user!");
     }
