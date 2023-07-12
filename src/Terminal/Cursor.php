@@ -31,6 +31,9 @@ class Cursor
         private readonly Shell $shell = new Shell(),
         private readonly mixed $inputStream = \STDIN
     ) {
+        if (!is_resource($this->inputStream)) {
+            throw new \InvalidArgumentException('Input stream must be a resource');
+        }
     }
 
     public function up(int $lines = 1): static
@@ -141,7 +144,7 @@ class Cursor
         (new StreamOutput($this->inputStream, false))->write(Terminal::CSI . '6n');
 
         //~ Read returned code from previous command on input stream
-        $code = (new StreamInput($this->inputStream))->readline();
+        $code = (string) (new StreamInput($this->inputStream))->readline();
 
         //~ Restore the stty to original mode
         $this->shell->exec("stty $mode");

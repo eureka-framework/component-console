@@ -14,6 +14,7 @@ namespace Eureka\Component\Console\Tests\Terminal;
 use Eureka\Component\Console\Output\StreamOutput;
 use Eureka\Component\Console\Terminal\Cursor;
 use Eureka\Component\Console\Terminal\Terminal;
+use http\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class CursorTest extends TestCase
@@ -52,6 +53,20 @@ class CursorTest extends TestCase
         fseek($stream, 0);
         $string = fgets($stream);
         $this->assertSame($expect, $string);
+    }
+
+    public function testAnExceptionIsThrownWhenGivenStreamInputIsNotAResource(): void
+    {
+        //~ Given
+        $stream = $this->getStream();
+        /** @var resource $inputStream */
+        $inputStream = 'any';
+
+        //~ Then
+        $this->expectException(\InvalidArgumentException::class);
+
+        //~ When
+        new Cursor(new StreamOutput($stream, false), inputStream: $inputStream);
     }
 
     /**
