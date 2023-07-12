@@ -23,9 +23,13 @@ use Eureka\Component\Console\Output\StreamOutput;
  */
 class Cursor
 {
+    /**
+     * @param resource $inputStream
+     */
     public function __construct(
         private readonly Output $output,
         private readonly Shell $shell = new Shell(),
+        private readonly mixed $inputStream = \STDIN
     ) {
     }
 
@@ -130,14 +134,14 @@ class Cursor
             return [1, 1];
         }
 
-        //~ enable control chars & enable displaying it
+        //~ enable control chars & enable displaying it that will avoid any display on terminal
         $this->shell->exec('stty -icanon -echo');
 
         //~ Write on input the following command will return the cursor position in this format "\033[{LINE};{COL}R"
-        (new StreamOutput(\STDIN, false))->write(Terminal::CSI . '6n');
+        (new StreamOutput($this->inputStream, false))->write(Terminal::CSI . '6n');
 
         //~ Read returned code from previous command on input stream
-        $code = (new StreamInput(\STDIN))->readString();
+        $code = (new StreamInput($this->inputStream))->readline();
 
         //~ Restore the stty to original mode
         $this->shell->exec("stty $mode");

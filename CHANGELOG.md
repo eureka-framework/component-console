@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ----
 
+## [6.0.1] - 2023-07-06
+[6.0.1]: https://github.com/eureka-framework/component-console/compare/6.0.0...6.0.1
+### Added
+- Cursor: can now pass stream input in constructor
+- Cursor::position(): fix reading input
+
 ## [6.0.0] - 2023-07-06
 [6.0.0]: https://github.com/eureka-framework/component-console/compare/5.3.1...6.0.0
 ### Added
