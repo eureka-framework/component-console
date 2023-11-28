@@ -79,7 +79,7 @@ class Table
 
         $width = array_reduce(
             $this->columns,
-            fn (int $width, Column $column) => $width + $column->getStyle()->getWidth(),
+            fn(int $width, Column $column) => $width + $column->getStyle()->getWidth(),
             count($this->columns) - 1
         );
 

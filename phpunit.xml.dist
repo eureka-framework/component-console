@@ -4,6 +4,16 @@
         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd"
         backupGlobals="true"
         colors="true"
+        displayDetailsOnTestsThatTriggerErrors="true"
+        displayDetailsOnTestsThatTriggerWarnings="true"
+        displayDetailsOnTestsThatTriggerNotices="true"
+        displayDetailsOnTestsThatTriggerDeprecations="true"
+        displayDetailsOnSkippedTests="true"
+        displayDetailsOnIncompleteTests="true"
+        failOnEmptyTestSuite="false"
+        failOnIncomplete="true"
+        failOnRisky="true"
+        failOnWarning="true"
         processIsolation="false"
         stopOnError="false"
         stopOnFailure="false"
@@ -13,10 +23,12 @@
         timeoutForSmallTests="1"
         timeoutForMediumTests="10"
         timeoutForLargeTests="60"
-        cacheDirectory=".phpunit.cache"
+        cacheDirectory="build/.phpunit.cache"
         backupStaticProperties="false"
-        requireCoverageMetadata="false"
->
+        requireCoverageMetadata="false">
+  <php>
+    <ini name="error_reporting" value="E_ALL"/>
+  </php>
 
   <source>
     <include>
@@ -25,8 +37,11 @@
   </source>
 
   <testsuites>
-    <testsuite name="Test suite">
-      <directory>./tests</directory>
+    <testsuite name="unit">
+      <directory>./tests/unit</directory>
+    </testsuite>
+    <testsuite name="integration">
+      <directory>./tests/integration</directory>
     </testsuite>
   </testsuites>
 

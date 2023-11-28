@@ -9,6 +9,12 @@
 
 declare(strict_types=1);
 
-namespace Eureka\Component\Console\Exception;
+namespace Eureka\Component\Console\Tests\Unit;
 
-class InvalidOutputException extends \LogicException {}
+class NotScript
+{
+    public function __construct()
+    {
+        //~ Any class that not a script
+    }
+}

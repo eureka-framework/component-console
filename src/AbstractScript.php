@@ -118,9 +118,7 @@ abstract class AbstractScript implements ScriptInterface
      * @return void
      * @codeCoverageIgnore
      */
-    public function before(): void
-    {
-    }
+    public function before(): void {}
 
     /**
      * Method called after run() method.
@@ -129,9 +127,7 @@ abstract class AbstractScript implements ScriptInterface
      * @return void
      * @codeCoverageIgnore
      */
-    public function after(): void
-    {
-    }
+    public function after(): void {}
 
     /**
      * @codeCoverageIgnore

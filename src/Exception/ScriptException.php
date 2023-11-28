@@ -11,6 +11,4 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Exception;
 
-class ScriptException extends \RuntimeException
-{
-}
+class ScriptException extends \RuntimeException {}

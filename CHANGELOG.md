@@ -6,16 +6,28 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ```
 ## [tag] - YYYY-MM-DD
-[tag]: https://github.com/eureka-framework/component-console/compare/5.1.0...master
+[tag]: https://github.com/eureka-framework/component-console/compare/6.1.0...master
 ### Changed
- * Change 1
+- Change 1
 ### Added
- * Added 1
+- Added 1
 ### Removed
- * Remove 1
+- Remove 1
 ```
 
 ----
+
+## [6.1.0] - 2023-11-28
+[6.1.0]: https://github.com/eureka-framework/component-console/compare/6.0.1...6.1.0
+### Added
+- Add PHP 8.3 compatibility
+- Add PHP CS fixer
+### Changed
+- Update Makefile
+- Update version
+- Update composer.json
+### Removed
+- Drop PHPCS support
 
 ## [6.0.1] - 2023-07-06
 [6.0.1]: https://github.com/eureka-framework/component-console/compare/6.0.0...6.0.1

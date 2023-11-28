@@ -24,8 +24,7 @@ class ProgressPercent implements Progress
         private readonly Options $options,
         private readonly int $nbElements,
         private readonly bool $capped = true,
-    ) {
-    }
+    ) {}
 
     public function inc(int $step = 1): static
     {
