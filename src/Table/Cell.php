@@ -19,8 +19,7 @@ class Cell
     public function __construct(
         private readonly string|int|float|bool|null $content,
         private readonly CellStyle $style = new CellStyle()
-    ) {
-    }
+    ) {}
 
     public function getStyle(): CellStyle
     {

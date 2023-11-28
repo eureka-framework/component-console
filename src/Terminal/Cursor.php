@@ -82,7 +82,7 @@ class Cursor
      */
     public function clear(int $mode = 2): static
     {
-        return $this->execute($mode  . 'J');
+        return $this->execute($mode . 'J');
     }
 
     /**
@@ -91,17 +91,17 @@ class Cursor
      */
     public function clearLine(int $mode = 2): static
     {
-        return $this->execute($mode  . 'K');
+        return $this->execute($mode . 'K');
     }
 
     public function scrollUp(int $page = 1): static
     {
-        return $this->execute($page  . 'S');
+        return $this->execute($page . 'S');
     }
 
     public function scrollDown(int $page = 1): static
     {
-        return $this->execute($page  . 'T');
+        return $this->execute($page . 'T');
     }
 
     public function save(): static

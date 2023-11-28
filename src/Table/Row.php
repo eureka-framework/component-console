@@ -23,8 +23,7 @@ class Row
         private array $cells = [],
         private readonly bool $isHeader = false,
         private readonly CellStyle $style = new CellStyle()
-    ) {
-    }
+    ) {}
 
     public function isHeader(): bool
     {

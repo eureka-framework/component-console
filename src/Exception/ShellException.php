@@ -11,6 +11,4 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Exception;
 
-class ShellException extends \RuntimeException
-{
-}
+class ShellException extends \RuntimeException {}

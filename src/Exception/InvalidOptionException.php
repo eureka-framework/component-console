@@ -11,6 +11,4 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Exception;
 
-class InvalidOptionException extends \LogicException
-{
-}
+class InvalidOptionException extends \LogicException {}

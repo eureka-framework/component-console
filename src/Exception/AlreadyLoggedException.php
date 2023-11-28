@@ -12,6 +12,4 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Exception;
 
-class AlreadyLoggedException extends \RuntimeException
-{
-}
+class AlreadyLoggedException extends \RuntimeException {}

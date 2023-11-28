@@ -121,8 +121,7 @@ class Border
         private readonly int $rendering = self::EXTENDED,
         private readonly int $thicknessOut = self::DOUBLE,
         private readonly Style $style = new Style(),
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<string>

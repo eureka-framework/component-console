@@ -13,9 +13,7 @@ namespace Eureka\Component\Console\Option;
 
 class OptionsParser
 {
-    public function __construct(private readonly Options $declaredOptions)
-    {
-    }
+    public function __construct(private readonly Options $declaredOptions) {}
 
     /**
      * Parse argument from command lines.

@@ -17,6 +17,4 @@ namespace Eureka\Component\Console\Color;
  * @author Romain Cottard
  * @link https://en.wikipedia.org/wiki/ANSI_escape_code
  */
-interface Bit4Color extends Color
-{
-}
+interface Bit4Color extends Color {}

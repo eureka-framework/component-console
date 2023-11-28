@@ -29,8 +29,7 @@ class Help
         private readonly Options $declaredOptions,
         private readonly Output $output,
         private readonly Options $parsedOptions = new Options()
-    ) {
-    }
+    ) {}
 
     /**
      * Display help

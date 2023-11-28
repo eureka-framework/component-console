@@ -142,3 +142,6 @@ for ($b = 0; $b < 256; $b++) {
     echo $text;
 }
 echo "\n";
+
+var_export(opcache_get_configuration());
+var_export(opcache_get_status()['jit']);

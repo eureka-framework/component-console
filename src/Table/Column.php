@@ -17,8 +17,7 @@ class Column
 {
     public function __construct(
         private readonly CellStyle $style = new CellStyle()
-    ) {
-    }
+    ) {}
 
     public function getStyle(): CellStyle
     {
