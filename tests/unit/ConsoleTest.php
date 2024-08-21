@@ -207,7 +207,7 @@ class ConsoleTest extends TestCase
         $expected = <<<OUTPUT
         [32m *** RUN - Script - HELP - 2015-10-15 01:22:00 ***[0m
         
-        [92m[1mUse    : [0m[97m[1mbin/console script [OPTION]...[0m
+        [92m[1mUse    : [0m[97m[1mbin/console Eureka/Component/Console/Tests/Unit/Script [OPTION]...[0m
         [32m[1mOPTIONS:[0m
         
         [32m *** END SCRIPT - Time taken: 0s - 2015-10-15 01:22:00 ***[0m

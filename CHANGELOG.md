@@ -17,6 +17,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ----
 
+## [6.2.0] - 2023-11-28
+[6.2.0]: https://github.com/eureka-framework/component-console/compare/6.1.0...6.2.0
+### Changed
+- Now AbstractScript::help() method have default behaviour
+- Fixed some cs & phpstan new reports
+### Added
+- Terminal::output() method to get the Output instance from Terminal
+
 ## [6.1.0] - 2023-11-28
 [6.1.0]: https://github.com/eureka-framework/component-console/compare/6.0.1...6.1.0
 ### Added

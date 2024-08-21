@@ -37,19 +37,18 @@ abstract class AbstractScript implements ScriptInterface
     private Options|null $options = null;
     private Options|null $declaredOptions = null;
 
-    /**
-     * Help method.
-     * Must be overridden.
-     *
-     * @return void
-     */
-    abstract public function help(): void;
+    public function help(): void
+    {
+        //~ Application\Script is generally the base namespace, so that part will be replaced
+        $script = \str_replace(['Application\\Script\\', '\\'], ['','/'], static::class);
+
+        //~ Build & display help
+        (new Help($script, $this->declaredOptions(), $this->output(), $this->options()))->display();
+    }
 
     /**
      * Run method.
      * Must be overridden.
-     *
-     * @return void
      */
     abstract public function run(): void;
 

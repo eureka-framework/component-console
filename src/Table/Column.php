@@ -16,7 +16,7 @@ use Eureka\Component\Console\Style\CellStyle;
 class Column
 {
     public function __construct(
-        private readonly CellStyle $style = new CellStyle()
+        private readonly CellStyle $style = new CellStyle(),
     ) {}
 
     public function getStyle(): CellStyle

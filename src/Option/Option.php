@@ -25,7 +25,7 @@ class Option implements \Stringable
         private readonly bool $mandatory = false,
         private readonly bool $hasArgument = false,
         private readonly string|int|float|bool|null $default = null,
-        private string|int|float|bool|null $argument = null
+        private string|int|float|bool|null $argument = null,
     ) {}
 
     public function getShortName(): ?string

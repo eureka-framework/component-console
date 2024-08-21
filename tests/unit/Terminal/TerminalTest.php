@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Tests\Unit\Terminal;
 
+use Eureka\Component\Console\Output\Output;
 use Eureka\Component\Console\Output\StreamOutput;
 use Eureka\Component\Console\Terminal\Cursor;
 use Eureka\Component\Console\Terminal\Shell;
@@ -82,6 +83,9 @@ class TerminalTest extends TestCase
         //~ Then
         $this->assertInstanceOf(Cursor::class, $terminal->cursor());
         $terminal->clear();
+
+        //~ Then
+        $this->assertInstanceOf(Output::class, $terminal->output());
 
         //~ Then
         $csi = Terminal::CSI;
