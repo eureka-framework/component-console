@@ -83,7 +83,7 @@ class Color8BitTest extends TestCase
             'RGB "red"'   => [5, 0, 0, 196],
             'RGB "green"' => [0, 5, 0, 46],
             'RGB "blue"'  => [0, 0, 5, 21],
-            'RGB "white"' => [5, 5, 5, 231]
+            'RGB "white"' => [5, 5, 5, 231],
         ];
     }
 

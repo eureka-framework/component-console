@@ -34,7 +34,7 @@ class Terminal
 
     public function __construct(
         private readonly Output $output,
-        private readonly Shell $shell = new Shell()
+        private readonly Shell $shell = new Shell(),
     ) {
         $this->cursor = new Cursor($this->output);
 
@@ -49,6 +49,11 @@ class Terminal
     public function cursor(): Cursor
     {
         return $this->cursor;
+    }
+
+    public function output(): Output
+    {
+        return $this->output;
     }
 
     public function getWidth(): int

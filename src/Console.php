@@ -111,20 +111,20 @@ class Console implements LoggerAwareInterface
                     shortName:   'h',
                     longName:    'help',
                     description: 'Display Help',
-                )
+                ),
             )
             ->add(
                 new Option(
                     longName:    'no-color',
                     description: 'Disable colors / styling (Can also be disabled with NO_COLOR env var)',
-                )
+                ),
             )
             ->add(
                 new Option(
                     longName:    'debug',
                     description: 'Activate debug mode (trace on exception if script is terminated with an exception)',
                     default:     false,
-                )
+                ),
             )
             ->add(
                 new Option(
@@ -132,7 +132,7 @@ class Console implements LoggerAwareInterface
                     description: 'Specified time limit in seconds (default: 0 - unlimited)',
                     hasArgument: true,
                     default:     0,
-                )
+                ),
             )
             ->add(
                 new Option(
@@ -140,7 +140,7 @@ class Console implements LoggerAwareInterface
                     description: 'Specified memory limit (128M, 1024M, 4G... - default: 256M)',
                     hasArgument: true,
                     default:     '256M',
-                )
+                ),
             )
             ->add(
                 new Option(
@@ -148,7 +148,7 @@ class Console implements LoggerAwareInterface
                     description: 'Specified value for error-reporting (default: -1 - all)',
                     hasArgument: true,
                     default:     -1,
-                )
+                ),
             )
             ->add(
                 new Option(
@@ -156,28 +156,28 @@ class Console implements LoggerAwareInterface
                     description: 'Specified value for display_errors setting. Values: 0|1 Default: 1 (display)',
                     hasArgument: true,
                     default:     1,
-                )
+                ),
             )
             ->add(
                 new Option(
                     longName:    'quiet',
                     description: 'Force disabled console output (if message are written on stream output)',
                     default:     false,
-                )
+                ),
             )
             ->add(
                 new Option(
                     longName:    'with-header',
                     description: 'Enable console lib message header',
                     default:     false,
-                )
+                ),
             )
             ->add(
                 new Option(
                     longName:    'with-footer',
                     description: 'Enable console lib messages footer',
                     default:     false,
-                )
+                ),
             )
             ->add(
                 new Option(
@@ -185,7 +185,7 @@ class Console implements LoggerAwareInterface
                     description: 'Console class script to run (Example: database/console)',
                     mandatory:   true,
                     hasArgument: true,
-                )
+                ),
             )
         ;
     }
@@ -298,7 +298,7 @@ class Console implements LoggerAwareInterface
             if ($this->logger instanceof LoggerInterface && !$exception instanceof Exception\AlreadyLoggedException) {
                 $this->logger->error(
                     $exception->getMessage(),
-                    ['exception' => $exception, 'type' => 'console.log']
+                    ['exception' => $exception, 'type' => 'console.log'],
                 ); // @codeCoverageIgnore
             }
 
@@ -348,7 +348,7 @@ class Console implements LoggerAwareInterface
     private function handleRun(
         string $scriptName,
         ScriptInterface $script,
-        bool &$beforeHasBeenRun
+        bool &$beforeHasBeenRun,
     ): void {
         // ~ Execute this method before starting main script method
         $script->before();

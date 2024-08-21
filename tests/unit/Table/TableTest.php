@@ -162,9 +162,9 @@ class TableTest extends TestCase
             [
                 new Column(),
                 new Column(),
-                new Column((new CellStyle(align: Align::Center))->background(Bit8StandardColor::Red))
+                new Column((new CellStyle(align: Align::Center))->background(Bit8StandardColor::Red)),
             ],
-            new Border(style: (new Style())->color(Bit8StandardColor::Green))
+            new Border(style: (new Style())->color(Bit8StandardColor::Green)),
         );
         $cell = new Cell(1.2, (new CellStyle(align: Align::Right))->background(Bit8StandardColor::Cyan)->bold());
         $table->newRow(['Col 1', 'Col 2', 'Col 3'], true);
@@ -194,9 +194,9 @@ class TableTest extends TestCase
             [
                 new Column(),
                 new Column(),
-                new Column((new CellStyle($options, align: Align::Center))->background(Bit8StandardColor::Red))
+                new Column((new CellStyle($options, align: Align::Center))->background(Bit8StandardColor::Red)),
             ],
-            new Border(style: (new Style($options))->color(Bit8StandardColor::Green))
+            new Border(style: (new Style($options))->color(Bit8StandardColor::Green)),
         );
         $cell = new Cell(1.2, (new CellStyle($options, align: Align::Right))->background(Bit8StandardColor::Cyan));
         $table->newRow(['Col 1', 'Col 2', 'Col 3'], true);

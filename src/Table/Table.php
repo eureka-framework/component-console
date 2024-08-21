@@ -73,14 +73,14 @@ class Table
     public function newRowSpan(
         Cell|string|int|float|bool|null $data,
         bool $isHeader = false,
-        CellStyle $style = new CellStyle(align: Align::Center)
+        CellStyle $style = new CellStyle(align: Align::Center),
     ): static {
         $row = new Row(isHeader: $isHeader, style: $style);
 
         $width = array_reduce(
             $this->columns,
             fn(int $width, Column $column) => $width + $column->getStyle()->getWidth(),
-            count($this->columns) - 1
+            count($this->columns) - 1,
         );
 
         if ($data instanceof Cell) {

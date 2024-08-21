@@ -39,7 +39,7 @@ class StreamInput implements Input
     /**
      * Read content from input.
      *
-     * @param int<0, max> $length
+     * @param int<1, max> $length
      * @param string $lineEnd
      * @return string|null
      */

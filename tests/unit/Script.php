@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Eureka\Component\Console\Tests\Unit;
 
 use Eureka\Component\Console\AbstractScript;
-use Eureka\Component\Console\Help;
 use Eureka\Component\Console\Option\Options;
 
 class Script extends AbstractScript
@@ -25,12 +24,6 @@ class Script extends AbstractScript
         $this->initOptions(new Options());
     }
 
-    public function help(): void
-    {
-        (new Help('script', $this->declaredOptions(), $this->output(), $this->options()))
-            ->display()
-        ;
-    }
 
     public function run(): void
     {

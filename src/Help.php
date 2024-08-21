@@ -28,7 +28,7 @@ class Help
         private readonly string $scriptName,
         private readonly Options $declaredOptions,
         private readonly Output $output,
-        private readonly Options $parsedOptions = new Options()
+        private readonly Options $parsedOptions = new Options(),
     ) {}
 
     /**
@@ -49,21 +49,21 @@ class Help
             (new Style($this->parsedOptions))
                 ->color(Bit4HighColor::Green)
                 ->bold()
-                ->apply('Use    : ')
+                ->apply('Use    : '),
         );
 
         $this->output->writeln(
             (new Style($this->parsedOptions))
                 ->color(Bit4HighColor::White)
                 ->bold()
-                ->apply("bin/console $this->scriptName [OPTION]...")
+                ->apply("bin/console $this->scriptName [OPTION]..."),
         );
 
         $this->output->writeln(
             (new Style($this->parsedOptions))
                 ->color(Bit4StandardColor::Green)
                 ->bold()
-                ->apply('OPTIONS:')
+                ->apply('OPTIONS:'),
         );
 
         foreach ($this->declaredOptions as $option) {

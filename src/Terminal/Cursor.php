@@ -29,7 +29,7 @@ class Cursor
     public function __construct(
         private readonly Output $output,
         private readonly Shell $shell = new Shell(),
-        private readonly mixed $inputStream = \STDIN
+        private readonly mixed $inputStream = \STDIN,
     ) {
         if (!is_resource($this->inputStream)) {
             throw new \InvalidArgumentException('Input stream must be a resource');
