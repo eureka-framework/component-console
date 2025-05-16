@@ -16,6 +16,7 @@ use Eureka\Component\Console\Output\StreamOutput;
 use Eureka\Component\Console\Terminal\Cursor;
 use Eureka\Component\Console\Terminal\Shell;
 use Eureka\Component\Console\Terminal\Terminal;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -28,7 +29,7 @@ class TerminalTest extends TestCase
     {
         $stream = fopen('php://memory', 'r+');
         if (!is_resource($stream)) {
-            $this->markTestSkipped('Cannot test method because cannot open memory stream resource');
+            throw new \UnexpectedValueException('Unable to open memory stream');
         }
 
         return $stream;
@@ -62,6 +63,7 @@ class TerminalTest extends TestCase
 
     /**
      * @return Shell&MockObject
+     * @throws Exception
      */
     private function getShell(string $format): Shell
     {
@@ -71,6 +73,9 @@ class TerminalTest extends TestCase
         return $shell;
     }
 
+    /**
+     * @throws Exception
+     */
     public function testTerminal(): void
     {
         //~ Given
@@ -79,21 +84,18 @@ class TerminalTest extends TestCase
 
         //~ When
         $terminal = new Terminal(new StreamOutput($stream, false), $shell);
-
-        //~ Then
-        $this->assertInstanceOf(Cursor::class, $terminal->cursor());
         $terminal->clear();
-
-        //~ Then
-        $this->assertInstanceOf(Output::class, $terminal->output());
-
-        //~ Then
         $csi = Terminal::CSI;
         fseek($stream, 0);
         $string = fgets($stream);
+
+        //~ Then
         $this->assertSame("{$csi}2J", $string);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testInitFromEnvVars(): void
     {
         //~ Given
@@ -114,6 +116,9 @@ class TerminalTest extends TestCase
         putenv("LINES");
     }
 
+    /**
+     * @throws Exception
+     */
     public function testInitFromFormat1(): void
     {
         //~ Given
@@ -128,6 +133,9 @@ class TerminalTest extends TestCase
         $this->assertSame(20, $terminal->getHeight());
     }
 
+    /**
+     * @throws Exception
+     */
     public function testInitFromFormat2(): void
     {
         //~ Given

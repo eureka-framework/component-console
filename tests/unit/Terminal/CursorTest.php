@@ -15,6 +15,7 @@ use Eureka\Component\Console\Output\StreamOutput;
 use Eureka\Component\Console\Terminal\Cursor;
 use Eureka\Component\Console\Terminal\Terminal;
 use http\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class CursorTest extends TestCase
@@ -36,9 +37,8 @@ class CursorTest extends TestCase
      * @param string $method
      * @param string $expect
      * @return void
-     *
-     * @dataProvider methodAndExpectProvider
      */
+    #[DataProvider('methodAndExpectProvider')]
     public function testMethod(string $method, string $expect): void
     {
         //~ Given
@@ -58,9 +58,12 @@ class CursorTest extends TestCase
     public function testAnExceptionIsThrownWhenGivenStreamInputIsNotAResource(): void
     {
         //~ Given
-        $stream = $this->getStream();
-        /** @var resource $inputStream */
-        $inputStream = 'any';
+        $stream      = $this->getStream();
+        $inputStream = fopen(__FILE__, 'r');
+        if (!is_resource($inputStream)) {
+            $this->markTestSkipped('Cannot test method because cannot open file stream resource');
+        }
+        fclose($inputStream); // Close the stream to simulate an invalid resource
 
         //~ Then
         $this->expectException(\InvalidArgumentException::class);

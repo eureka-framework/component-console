@@ -14,7 +14,6 @@ namespace Eureka\Component\Console\Tests\Unit;
 use Eureka\Component\Console\Console;
 use Eureka\Component\Console\Input\StreamInput;
 use Eureka\Component\Console\Output\StreamOutput;
-use Eureka\Component\Console\Terminal\Terminal;
 use Lcobucci\Clock\FrozenClock;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
@@ -25,7 +24,7 @@ class ConsoleTest extends TestCase
      * @param resource $streamIn
      * @param resource $streamOut
      * @param resource $streamOutErr
-     * @param string[] $argv
+     * @param list<string> $argv
      * @return Console
      */
     private function getConsole($streamIn, $streamOut, $streamOutErr, array $argv = []): Console
@@ -47,7 +46,6 @@ class ConsoleTest extends TestCase
         $console = $this->getConsole($stream, $stream, $stream, ['bin/console']);
         $console->setLogger(new NullLogger());
 
-        $this->assertInstanceOf(Terminal::class, $console->getTerminal());
         $console->setBaseNamespaces(['Eureka\Component\Console\Tests\Unit']);
 
         $console->before();
@@ -93,7 +91,6 @@ class ConsoleTest extends TestCase
         $console = $this->getConsole($stream, $stream, $stream, ['bin/console', '-h']);
         $console->setLogger(new NullLogger());
 
-        $this->assertInstanceOf(Terminal::class, $console->getTerminal());
         $console->setBaseNamespaces(['Eureka\Component\Console\Tests\Unit']);
 
         $console->before();
@@ -136,7 +133,6 @@ class ConsoleTest extends TestCase
         $console = $this->getConsole($stream, $stream, $stream, ['bin/console', 'script']);
         $console->setLogger(new NullLogger());
 
-        $this->assertInstanceOf(Terminal::class, $console->getTerminal());
         $console->setBaseNamespaces(['Eureka\Component\Console\Tests\Unit']);
 
         $console->before();
@@ -164,7 +160,6 @@ class ConsoleTest extends TestCase
         $console = $this->getConsole($stream, $stream, $stream, $argv);
         $console->setLogger(new NullLogger());
 
-        $this->assertInstanceOf(Terminal::class, $console->getTerminal());
         $console->setBaseNamespaces(['Eureka\Component\Console\Tests\Unit']);
 
         $console->before();
@@ -194,7 +189,6 @@ class ConsoleTest extends TestCase
         $console = $this->getConsole($stream, $stream, $stream, $argv);
         $console->setLogger(new NullLogger());
 
-        $this->assertInstanceOf(Terminal::class, $console->getTerminal());
         $console->setBaseNamespaces(['Eureka\Component\Console\Tests\Unit']);
 
         $console->before();
@@ -227,7 +221,6 @@ class ConsoleTest extends TestCase
         $console = $this->getConsole($stream, $stream, $stream, $argv);
         $console->setLogger(new NullLogger());
 
-        $this->assertInstanceOf(Terminal::class, $console->getTerminal());
         $console->setBaseNamespaces(['Eureka\Component\Console\Tests\Unit']);
 
         $console->before();
@@ -256,7 +249,6 @@ class ConsoleTest extends TestCase
         $console = $this->getConsole($stream, $stream, $stream, $argv);
         $console->setLogger(new NullLogger());
 
-        $this->assertInstanceOf(Terminal::class, $console->getTerminal());
         $console->setBaseNamespaces(['Eureka\Component\Console\Tests\Unit']);
 
         $this->expectException(\LogicException::class);
@@ -276,7 +268,6 @@ class ConsoleTest extends TestCase
         $console = $this->getConsole($stream, $stream, $stream, $argv);
         $console->setLogger(new NullLogger());
 
-        $this->assertInstanceOf(Terminal::class, $console->getTerminal());
         $console->setBaseNamespaces(['Eureka\Component\Console\Tests\Unit']);
 
         $console->before();

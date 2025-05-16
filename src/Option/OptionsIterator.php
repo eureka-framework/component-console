@@ -23,7 +23,7 @@ class OptionsIterator implements \Iterator
     protected int $index = 0;
 
     /** @var array<string> $arguments List of arguments */
-    protected array $arguments = array();
+    protected array $arguments = [];
 
     /**
      * Class constructor
