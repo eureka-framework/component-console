@@ -17,7 +17,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ----
 
-## [6.2.0] - 2023-11-28
+## [6.3.0] - 2025-05-16
+[6.3.0]: https://github.com/eureka-framework/component-console/compare/6.2.0...6.3.0
+### Changed
+- Some minor fixes in phpdoc & types (after phpstan analysis)
+- Some fixes in tests
+- Improve Makefile
+- Improve .github/workflows
+### Added
+- PHP 8.4 compatibility
+
+## [6.2.0] - 2024-08-21
 [6.2.0]: https://github.com/eureka-framework/component-console/compare/6.1.0...6.2.0
 ### Changed
 - Now AbstractScript::help() method have default behaviour

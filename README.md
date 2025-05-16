@@ -1,7 +1,7 @@
 # Component Console (formerly [Eurekon](https://github.com/eureka-framework/Eurekon))
 
 [![Current version](https://img.shields.io/packagist/v/eureka/component-console.svg?logo=composer)](https://packagist.org/packages/eureka/component-console)
-[![Supported PHP version](https://img.shields.io/static/v1?logo=php&label=PHP&message=8.1%20-%208.3&color=777bb4)](https://packagist.org/packages/eureka/component-console)
+[![Supported PHP version](https://img.shields.io/static/v1?logo=php&label=PHP&message=8.1%20-%208.4&color=777bb4)](https://packagist.org/packages/eureka/component-console)
 ![CI](https://github.com/eureka-framework/component-console/workflows/CI/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=eureka-framework_component-console&metric=alert_status)](https://sonarcloud.io/dashboard?id=eureka-framework_component-console)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=eureka-framework_component-console&metric=coverage)](https://sonarcloud.io/dashboard?id=eureka-framework_component-console)
