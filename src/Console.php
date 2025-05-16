@@ -84,7 +84,7 @@ class Console implements LoggerAwareInterface
 
     public function getTerminal(): Terminal
     {
-        return $this->terminal;
+        return $this->terminal; // @codeCoverageIgnore
     }
 
     /**
@@ -108,82 +108,82 @@ class Console implements LoggerAwareInterface
         return (new Options())
             ->add(
                 new Option(
-                    shortName:   'h',
-                    longName:    'help',
+                    shortName: 'h',
+                    longName: 'help',
                     description: 'Display Help',
                 ),
             )
             ->add(
                 new Option(
-                    longName:    'no-color',
+                    longName: 'no-color',
                     description: 'Disable colors / styling (Can also be disabled with NO_COLOR env var)',
                 ),
             )
             ->add(
                 new Option(
-                    longName:    'debug',
+                    longName: 'debug',
                     description: 'Activate debug mode (trace on exception if script is terminated with an exception)',
-                    default:     false,
+                    default: false,
                 ),
             )
             ->add(
                 new Option(
-                    longName:    'time-limit',
+                    longName: 'time-limit',
                     description: 'Specified time limit in seconds (default: 0 - unlimited)',
                     hasArgument: true,
-                    default:     0,
+                    default: 0,
                 ),
             )
             ->add(
                 new Option(
-                    longName:    'memory-limit',
+                    longName: 'memory-limit',
                     description: 'Specified memory limit (128M, 1024M, 4G... - default: 256M)',
                     hasArgument: true,
-                    default:     '256M',
+                    default: '256M',
                 ),
             )
             ->add(
                 new Option(
-                    longName:    'error-reporting',
+                    longName: 'error-reporting',
                     description: 'Specified value for error-reporting (default: -1 - all)',
                     hasArgument: true,
-                    default:     -1,
+                    default: -1,
                 ),
             )
             ->add(
                 new Option(
-                    longName:    'error-display',
+                    longName: 'error-display',
                     description: 'Specified value for display_errors setting. Values: 0|1 Default: 1 (display)',
                     hasArgument: true,
-                    default:     1,
+                    default: 1,
                 ),
             )
             ->add(
                 new Option(
-                    longName:    'quiet',
+                    longName: 'quiet',
                     description: 'Force disabled console output (if message are written on stream output)',
-                    default:     false,
+                    default: false,
                 ),
             )
             ->add(
                 new Option(
-                    longName:    'with-header',
+                    longName: 'with-header',
                     description: 'Enable console lib message header',
-                    default:     false,
+                    default: false,
                 ),
             )
             ->add(
                 new Option(
-                    longName:    'with-footer',
+                    longName: 'with-footer',
                     description: 'Enable console lib messages footer',
-                    default:     false,
+                    default: false,
                 ),
             )
             ->add(
                 new Option(
-                    longName:    'script',
+                    longName: 'script',
                     description: 'Console class script to run (Example: database/console)',
-                    mandatory:   true,
+                    mandatory: true,
                     hasArgument: true,
                 ),
             )

@@ -26,6 +26,7 @@ class OptionsParser
         $argv ??= ($_SERVER['argv'] ?? []);
 
         $options  = clone $this->declaredOptions;
+        /** @var array<string> $argv */
         $iterator = new OptionsIterator($argv);
 
         foreach ($iterator as $name) {

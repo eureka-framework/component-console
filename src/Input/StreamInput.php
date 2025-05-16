@@ -50,11 +50,14 @@ class StreamInput implements Input
 
     /**
      * @param string $format
-     * @return array<int, string|float|int|bool>
+     * @return list<string|float|int|bool>
      */
     public function readFormat(string $format): array
     {
-        return (array) fscanf($this->stream, $format);
+        /** @var list<string|float|int|bool> $data */
+        $data = (array) fscanf($this->stream, $format);
+
+        return $data;
     }
 
     public function readString(): string

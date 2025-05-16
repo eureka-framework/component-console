@@ -44,7 +44,6 @@ class StreamInputTest extends TestCase
         $input = new StreamInput($stream);
 
         //~ Then
-        $this->assertInstanceOf(Input::class, $input);
         $this->assertSame('any string as input', $input->readLine());
     }
 
@@ -61,7 +60,6 @@ class StreamInputTest extends TestCase
         $input = new StreamInput($stream);
 
         //~ Then
-        $this->assertInstanceOf(Input::class, $input);
         $this->assertSame('any', $input->readString());
     }
 
@@ -78,7 +76,6 @@ class StreamInputTest extends TestCase
         $input = new StreamInput($stream);
 
         //~ Then
-        $this->assertInstanceOf(Input::class, $input);
         $this->assertSame(12345, $input->readInt());
     }
 
@@ -95,7 +92,6 @@ class StreamInputTest extends TestCase
         $input = new StreamInput($stream);
 
         //~ Then
-        $this->assertInstanceOf(Input::class, $input);
         $this->assertSame(123.45, $input->readFloat());
     }
 
@@ -112,7 +108,6 @@ class StreamInputTest extends TestCase
         $input = new StreamInput($stream);
 
         //~ Then
-        $this->assertInstanceOf(Input::class, $input);
         $this->assertTrue($input->readBool());
     }
 
@@ -129,15 +124,17 @@ class StreamInputTest extends TestCase
         $input = new StreamInput($stream);
 
         //~ Then
-        $this->assertInstanceOf(Input::class, $input);
         $this->assertSame(['any', 12, 34.56, 0], $input->readFormat('%s %d %f %d'));
     }
 
     public function testAnExceptionIsThrownWhenAnInvalidStreamIsGiven(): void
     {
         //~ Given
-        /** @var resource $stream */
-        $stream = 0;
+        $stream = fopen(__FILE__, 'r');
+        if (!is_resource($stream)) {
+            $this->markTestSkipped('Cannot test method because cannot open file stream resource');
+        }
+        fclose($stream); // Close the stream to simulate an invalid resource
 
         //~ Then
         $this->expectException(InvalidInputException::class);

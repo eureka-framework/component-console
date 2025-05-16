@@ -14,5 +14,5 @@ parameters:
 
   ignoreErrors:
     -
-      path: 'src/Input/StreamInput.php'
-      message: '`Method .*StreamInput::readFormat\(\) should return array\<int, bool\|float\|int\|string\> but returns array\<int, mixed\>\.`'
+      message: '`Call to method PHPUnit\\Framework\\Assert::assertTrue\(\) with true will always evaluate to true.`'
+      path:    'tests/unit/Output/NullOutputTest.php'

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Eureka\Component\Console\Tests\Unit\Table;
 
 use Eureka\Component\Console\Table\Border;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class BorderTest extends TestCase
@@ -41,9 +42,8 @@ class BorderTest extends TestCase
      * @param int $thickness
      * @param int $type
      * @param array<string> $expectedChars
-     *
-     * @dataProvider borderProvider
      */
+    #[DataProvider('borderProvider')]
     public function testICanGetCharsForInnerBar(int $thickness, int $type, array $expectedChars): void
     {
         $chars = (new Border(Border::BASE))->getCharsInnerBar($thickness, $type);
@@ -149,9 +149,8 @@ class BorderTest extends TestCase
      * @param int $thickness
      * @param int $type
      * @param array<string> $expectedChars
-     *
-     * @dataProvider borderExpendedAsciiProvider
      */
+    #[DataProvider('borderExpendedAsciiProvider')]
     public function testICanGetCharsForInnerBarWithExtendedAscii(int $thickness, int $type, array $expectedChars): void
     {
         $chars = (new Border())->getCharsInnerBar($thickness, $type);

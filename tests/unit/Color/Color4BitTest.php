@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Eureka\Component\Console\Tests\Unit\Color;
 
-use Eureka\Component\Console\Color\Bit4Color;
 use Eureka\Component\Console\Color\Bit4HighColor;
 use Eureka\Component\Console\Color\Bit4StandardColor;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +23,6 @@ class Color4BitTest extends TestCase
         $color = Bit4StandardColor::Red;
 
         //~ Then
-        $this->assertInstanceOf(Bit4Color::class, $color);
         $this->assertSame(Bit4StandardColor::Red->value, $color->getIndex());
     }
 
@@ -34,7 +32,6 @@ class Color4BitTest extends TestCase
         $color = Bit4HighColor::Red;
 
         //~ Then
-        $this->assertInstanceOf(Bit4Color::class, $color);
         $this->assertSame(Bit4HighColor::Red->value, $color->getIndex());
     }
 }

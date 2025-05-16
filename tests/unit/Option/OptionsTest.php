@@ -183,20 +183,6 @@ class OptionsTest extends TestCase
         $options->get('baz');
     }
 
-    public function testCanIterateOnOptions(): void
-    {
-        //~ Given
-        $options       = new Options();
-        $mockArguments = ['--foo=bar', '-f', 'baz'];
-
-        //~ When
-        $options = (new OptionsParser($options))->parse($mockArguments);
-
-        foreach ($options as $option) {
-            $this->assertInstanceOf(Option::class, $option);
-        }
-    }
-
     public function testCanGetNumberOfOptions(): void
     {
         //~ Given

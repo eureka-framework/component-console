@@ -16,6 +16,7 @@ use Eureka\Component\Console\Color\Bit8GreyscaleColor;
 use Eureka\Component\Console\Color\Bit8HighColor;
 use Eureka\Component\Console\Color\Bit8RGBColor;
 use Eureka\Component\Console\Color\Bit8StandardColor;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class Color8BitTest extends TestCase
@@ -29,7 +30,6 @@ class Color8BitTest extends TestCase
         $color = new Bit8GreyscaleColor($intensity);
 
         //~ Then
-        $this->assertInstanceOf(Bit8Color::class, $color);
         $this->assertSame(233, $color->getIndex());
     }
 
@@ -57,9 +57,7 @@ class Color8BitTest extends TestCase
         new Bit8GreyscaleColor($intensity);
     }
 
-    /**
-     * @dataProvider correctRGBProvider
-     */
+    #[DataProvider('correctRGBProvider')]
     public function testICanGetRGBColor(int $r, int $g, int $b, int $expected): void
     {
         //~ Given
@@ -69,7 +67,6 @@ class Color8BitTest extends TestCase
         $color = new Bit8RGBColor($r, $g, $b);
 
         //~ Then
-        $this->assertInstanceOf(Bit8Color::class, $color);
         $this->assertSame($expected, $color->getIndex());
     }
 
@@ -87,9 +84,7 @@ class Color8BitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider incorrectRGBProvider
-     */
+    #[DataProvider('incorrectRGBProvider')]
     public function testAnExceptionIsThrownWhenITryToSetAnIncorrectRGBValue(int $r, int $g, int $b): void
     {
         //~ Given
@@ -123,7 +118,6 @@ class Color8BitTest extends TestCase
         $color = Bit8StandardColor::Red;
 
         //~ Then
-        $this->assertInstanceOf(Bit8Color::class, $color);
         $this->assertSame(Bit8StandardColor::Red->value, $color->getIndex());
     }
 
@@ -133,7 +127,6 @@ class Color8BitTest extends TestCase
         $color = Bit8HighColor::Red;
 
         //~ Then
-        $this->assertInstanceOf(Bit8Color::class, $color);
         $this->assertSame(Bit8HighColor::Red->value, $color->getIndex());
     }
 }

@@ -40,8 +40,6 @@ class StreamOutputTest extends TestCase
         $output->writeln(' string');
 
         //~ Then
-        $this->assertInstanceOf(Output::class, $output);
-
         fseek($stream, 0);
 
         $string = fgets($stream);
@@ -57,8 +55,6 @@ class StreamOutputTest extends TestCase
         $output->writeln(' string');
 
         //~ Then
-        $this->assertInstanceOf(Output::class, $output);
-
         fseek($stream, 0);
 
         $string = fgets($stream); // No output written, so should be false
@@ -68,8 +64,11 @@ class StreamOutputTest extends TestCase
     public function testAnExceptionIsThrownWhenAnInvalidStreamIsGiven(): void
     {
         //~ Given
-        /** @var resource $stream */
-        $stream = 0;
+        $stream = fopen(__FILE__, 'r');
+        if (!is_resource($stream)) {
+            $this->markTestSkipped('Cannot test method because cannot open file stream resource');
+        }
+        fclose($stream); // Close the stream to simulate an invalid resource
 
         //~ Then
         $this->expectException(InvalidOutputException::class);

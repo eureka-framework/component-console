@@ -13,21 +13,22 @@ namespace Eureka\Component\Console\Tests\Unit\Color;
 
 use Eureka\Component\Console\Color\Bit24Color;
 use Eureka\Component\Console\Color\Bit24RGBColor;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class Color24BitTest extends TestCase
 {
     /**
      * @param int[] $expected
-     * @dataProvider correctRGBProvider
      */
+    #[DataProvider('correctRGBProvider')]
     public function testICanGetRGBColor(int $r, int $g, int $b, array $expected): void
     {
         //~ When
         $color = new Bit24RGBColor($r, $g, $b);
 
         //~ Then
-        $this->assertInstanceOf(Bit24Color::class, $color);
         $this->assertSame($expected, $color->rgb());
         $this->assertSame($r, $color->r());
         $this->assertSame($g, $color->g());
@@ -49,9 +50,7 @@ class Color24BitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider incorrectRGBProvider
-     */
+    #[DataProvider('incorrectRGBProvider')]
     public function testAnExceptionIsThrownWhenITryToSetAnIncorrectRGBValue(int $r, int $g, int $b): void
     {
         //~ Given

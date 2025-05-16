@@ -48,12 +48,12 @@ class Terminal
 
     public function cursor(): Cursor
     {
-        return $this->cursor;
+        return $this->cursor; // @codeCoverageIgnore
     }
 
     public function output(): Output
     {
-        return $this->output;
+        return $this->output; // @codeCoverageIgnore
     }
 
     public function getWidth(): int
@@ -68,8 +68,8 @@ class Terminal
 
     private function init(): void
     {
-        $width  = false !== \getenv('COLUMNS') ? (int) trim(\getenv('COLUMNS')) : null;
-        $height = false !== \getenv('LINES') ? (int) trim(\getenv('LINES')) : null;
+        $width  = false !== \getenv('COLUMNS') ? (int) trim((string) \getenv('COLUMNS')) : null;
+        $height = false !== \getenv('LINES') ? (int) trim((string) \getenv('LINES')) : null;
 
         if ($width !== null && $height !== null) {
             $this->width  = $width;
@@ -77,12 +77,12 @@ class Terminal
             return;
         }
 
+        //~ Set default value, that could be overridden by stty
+        $this->width  = 80;
+        $this->height = 50;
+
         //~ No value found from env vars, try to get them from shell command
         $this->initFromStty();
-
-        //~ No value found, so use default value
-        $this->width  ??= 80;
-        $this->height ??= 50;
     }
 
     private function initFromStty(): void

@@ -23,8 +23,6 @@ class NullInputTest extends TestCase
         $input = new NullInput();
 
         //~ Then
-        $this->assertInstanceOf(Input::class, $input);
-
         $this->assertNull($input->readLine());
         $this->assertSame([], $input->readFormat(''));
         $this->assertSame('', $input->readString());

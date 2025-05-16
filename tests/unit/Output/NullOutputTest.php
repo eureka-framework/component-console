@@ -23,9 +23,9 @@ class NullOutputTest extends TestCase
         $output = new NullOutput();
 
         //~ Then
-        $this->assertInstanceOf(Output::class, $output);
-
         $output->write('');
         $output->writeln('');
+
+        $this->assertTrue(true);
     }
 }
