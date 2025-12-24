@@ -20,7 +20,7 @@ class Shell
      * @return string|null
      * @codeCoverageIgnore
      */
-    public function exec(string $command): string|null
+    public function exec(string $command): ?string
     {
         $result = \shell_exec($command);
 

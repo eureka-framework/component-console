@@ -29,7 +29,7 @@ class ProgressBar implements Progress
         private readonly string $progressChar = '█',
         private readonly string $backgroundChar = '░',
         private readonly bool $capped = true,
-        private readonly Terminal|null $terminal = null,
+        private readonly ?Terminal $terminal = null,
     ) {
         if ($this->maxSize === 0) {
             $this->maxSize = $this->terminal !== null ? $this->terminal->getWidth() - 4 : 20;
@@ -43,7 +43,7 @@ class ProgressBar implements Progress
         return $this;
     }
 
-    public function render(string $label = '', Color|null $progress = null, Color|null $background = null): string
+    public function render(string $label = '', ?Color $progress = null, ?Color $background = null): string
     {
         $percentSize = ($this->maxSize / 100);
         $percent     = 100 / $this->nbElements * $this->step;

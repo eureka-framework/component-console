@@ -130,7 +130,7 @@ class Table
         return implode(PHP_EOL, $table) . PHP_EOL;
     }
 
-    private function getBorderType(Row|null $previous, Row|null $next): int
+    private function getBorderType(?Row $previous, ?Row $next): int
     {
         $isInner  = $next !== null && $previous !== null;
 

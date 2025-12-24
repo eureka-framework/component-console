@@ -21,7 +21,7 @@ class OptionsParser
      * @param array<string>|null $argv CLI arguments.
      * @return Options
      */
-    public function parse(array|null $argv = null): Options
+    public function parse(?array $argv = null): Options
     {
         $argv ??= ($_SERVER['argv'] ?? []);
 

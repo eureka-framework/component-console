@@ -17,6 +17,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ----
 
+## [7.0.0] - 2025-12-24
+[7.0.0]: https://github.com/eureka-framework/component-console/compare/6.3.0...7.0.0
+### Added
+- Support PHP 8.5
+### Removed
+- Drop PHP 7.4 compatibility
+- Drop PHP 8.1 compatibility
+- Drop PHP 8.2 compatibility
+
+----
+
 ## [6.3.0] - 2025-05-16
 [6.3.0]: https://github.com/eureka-framework/component-console/compare/6.2.0...6.3.0
 ### Changed

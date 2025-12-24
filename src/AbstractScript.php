@@ -31,11 +31,11 @@ abstract class AbstractScript implements ScriptInterface
     /** @var string $description Console script description. */
     private string $description = 'Script description for Help !';
 
-    private Input|null $input = null;
-    private Output|null $output = null;
-    private Output|null $outputErr = null;
-    private Options|null $options = null;
-    private Options|null $declaredOptions = null;
+    private ?Input $input = null;
+    private ?Output $output = null;
+    private ?Output $outputErr = null;
+    private ?Options $options = null;
+    private ?Options $declaredOptions = null;
 
     public function help(): void
     {

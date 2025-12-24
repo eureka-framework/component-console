@@ -80,7 +80,7 @@ class Options implements \Iterator, \Countable
      * @param string|null $alias Option alias name (if exists)
      * @return bool
      */
-    public function has(string $name, string|null $alias = null): bool
+    public function has(string $name, ?string $alias = null): bool
     {
         return isset($this->options[$name]) || (!empty($alias) && isset($this->options[$alias]));
     }

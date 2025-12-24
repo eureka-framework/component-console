@@ -33,7 +33,7 @@ class ProgressPercent implements Progress
         return $this;
     }
 
-    public function render(string $label = '', Color|null $progress = null, Color|null $background = null): string
+    public function render(string $label = '', ?Color $progress = null, ?Color $background = null): string
     {
         $percent = 100 / $this->nbElements * $this->step;
 
@@ -51,10 +51,10 @@ class ProgressPercent implements Progress
         $background ??= Bit8StandardColor::Green;
 
         return
-            (new Style())->color($background)->apply('[') .
-            (new Style())->color($progress)->apply($text) .
-            (new Style())->color($background)->apply(']') .
-            " $label"
+            (new Style())->color($background)->apply('[')
+            . (new Style())->color($progress)->apply($text)
+            . (new Style())->color($background)->apply(']')
+            . " $label"
         ;
     }
 }
