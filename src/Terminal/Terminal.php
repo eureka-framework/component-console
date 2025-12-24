@@ -89,8 +89,8 @@ class Terminal
     {
         $stty = (string) $this->shell->exec('stty -a');
         if (
-            \preg_match('`rows.(?<height>\d+);.columns.(?<width>\d+);`is', $stty, $matches) > 0 ||
-            \preg_match('`;.(?<height>\d+).rows;.(?<width>\d+).columns`is', $stty, $matches) > 0
+            \preg_match('`rows.(?<height>\d+);.columns.(?<width>\d+);`is', $stty, $matches) > 0
+            || \preg_match('`;.(?<height>\d+).rows;.(?<width>\d+).columns`is', $stty, $matches) > 0
         ) {
             $this->width  = (int) $matches['width'];
             $this->height = (int) $matches['height'];

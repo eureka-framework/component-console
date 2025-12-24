@@ -17,5 +17,5 @@ interface Progress
 {
     public function inc(int $step = 1): static;
 
-    public function render(string $label = '', Color|null $progress = null, Color|null $background = null): string;
+    public function render(string $label = '', ?Color $progress = null, ?Color $background = null): string;
 }

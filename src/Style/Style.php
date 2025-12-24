@@ -26,8 +26,8 @@ use Eureka\Component\Console\Terminal\Terminal;
  */
 class Style
 {
-    protected Color|null $fgColor = null;
-    protected Color|null $bgColor = null;
+    protected ?Color $fgColor = null;
+    protected ?Color $bgColor = null;
     protected bool $bold = false;
     protected bool $faint = false;
     protected bool $italic = false;
@@ -42,8 +42,8 @@ class Style
     public function __construct(?Options $options = null)
     {
         if (
-            ($options !== null && $options->has('no-color') && $options->get('no-color')->getArgument()) ||
-            !empty(getenv('NO_COLOR'))
+            ($options !== null && $options->has('no-color') && $options->get('no-color')->getArgument())
+            || !empty(getenv('NO_COLOR'))
         ) {
             $this->noColor = true;
         }

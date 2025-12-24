@@ -34,7 +34,7 @@ class CellStyle extends Style
         parent::__construct($options);
     }
 
-    public function inheritFrom(CellStyle|null $inheritedStyle): CellStyle
+    public function inheritFrom(?CellStyle $inheritedStyle): CellStyle
     {
         if ($inheritedStyle === null) {
             return clone $this;
